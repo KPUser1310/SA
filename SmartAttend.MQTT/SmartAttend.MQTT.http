@@ -1,0 +1,6 @@
+@SmartAttend.MQTT_HostAddress = http://localhost:5007
+
+GET {{SmartAttend.MQTT_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

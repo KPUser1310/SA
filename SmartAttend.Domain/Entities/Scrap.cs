@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SmartAttend.Domain.Entities
+{
+    public partial class Scrap : BaseEntity
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int PartId { get; set; }
+        public long? DeviceId { get; set; }
+        public int ScrapCount { get; set; } = 0;
+        public DateTime? StartDateTime { get; set; }
+        public DateTime? EndDateTime { get; set; }
+        public string? ScrapReason { get; set; }
+        public string? Notes { get; set; }
+        public string? UserName { get; set; }
+
+        [ForeignKey(nameof(DeviceId))]
+        public virtual Device Device { get; set; }
+
+        [ForeignKey(nameof(PartId))]
+        public virtual Part Part { get; set; }
+    }
+}

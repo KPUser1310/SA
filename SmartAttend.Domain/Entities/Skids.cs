@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SmartAttend.Domain.Entities
+{
+    public partial class Skids : BaseEntity
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int PartId { get; set; }
+        public long DeviceId { get; set; }
+        public int Quantity { get; set; }
+        public int? UserId { get; set; }
+
+        [ForeignKey(nameof(PartId))]
+        public virtual Part Part { get; set; }
+
+        [ForeignKey(nameof(DeviceId))]
+        public virtual Device Device { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public virtual Account Account { get; set; }
+    }
+}

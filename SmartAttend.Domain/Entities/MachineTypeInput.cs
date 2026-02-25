@@ -1,0 +1,31 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SmartAttend.Domain.Entities
+{
+    public partial class MachineTypeInput
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int MachineTypeId { get; set; }
+        public int InputNo { get; set; }
+        [Column(TypeName = "numeric(3,0)")]
+        public int Active { get; set; }
+        public string Name { get; set; } 
+        public string Priority { get; set; } 
+        public string Color { get; set; }
+        public string FlashSpeed { get; set; } 
+        public string Sound { get; set; } 
+        public string Delay { get; set; }
+
+
+        [ForeignKey(nameof(MachineTypeId))]
+        public virtual MachineType MachineType { get; set; }
+    }
+}

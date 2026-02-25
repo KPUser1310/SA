@@ -1,0 +1,32 @@
+﻿################################################################################
+# General .NET / Visual Studio
+################################################################################
+
+# Build results
+**/bin/
+**/obj/
+
+# Debug / Release
+Debug/
+Release/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# Publish Profiles (optional)
+**/Properties/PublishProfiles/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

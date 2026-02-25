@@ -1,0 +1,6 @@
+@SmartAttend.Api_HostAddress = http://localhost:5192
+
+GET {{SmartAttend.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

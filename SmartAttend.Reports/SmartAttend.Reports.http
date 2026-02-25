@@ -1,0 +1,6 @@
+@SmartAttend.Reports_HostAddress = http://localhost:5208
+
+GET {{SmartAttend.Reports_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

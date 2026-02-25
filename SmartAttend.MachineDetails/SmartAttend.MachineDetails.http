@@ -1,0 +1,6 @@
+@SmartAttend.MachineDetails_HostAddress = http://localhost:5269
+
+GET {{SmartAttend.MachineDetails_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
