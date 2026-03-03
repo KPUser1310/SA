@@ -18,6 +18,7 @@ namespace SmartAttend.Domain.Entities
         public string? Message { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceDataMapId))]
         public virtual DeviceDataMap DeviceDataMap { get; set; }

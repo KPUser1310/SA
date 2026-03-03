@@ -21,7 +21,8 @@ namespace SmartAttend.Domain.Entities
         public int? ShiftId { get; set; }
         public int IsApplied { get; set; } = 0;
         public bool? IsResetPartDate { get; set; } = false;
-       
+        public bool IsDelete { get; set; } = false;
+
         [ForeignKey(nameof(CalendarEventId))]
         public virtual CalendarEvent CalendarEvent { get; set; }
     }

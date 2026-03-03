@@ -28,6 +28,7 @@ namespace SmartAttend.Domain.Entities
         public bool? Friday { get; set; } = false;
         public bool? Saturday { get; set; } = false;
         public bool? Sunday { get; set; } = false;
+        public bool IsDelete { get; set; } = false;
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }
     }

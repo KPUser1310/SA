@@ -23,6 +23,7 @@ namespace SmartAttend.Domain.Entities
         public bool IsActive { get; set; }
         public int? GraphId { get; set; }  
         public string? GraphName { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceId))]
         public virtual Device Device { get; set; }

@@ -18,7 +18,7 @@ namespace SmartAttend.Domain.Entities
         public int? PartId { get; set; }
         public string? Notes { get; set; }
         public int? CustomerId { get; set; }
-        public bool? IsActive { get; set; } = true;
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceId))]
         public virtual Device Device { get; set; }

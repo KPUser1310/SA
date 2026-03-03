@@ -19,7 +19,7 @@ namespace SmartAttend.Domain.Entities
         public int? ReportValue { get; set; }
         public string? Message { get; set; }
         public int? Remainder { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(CycleMaintenanceId))]
         public virtual CycleMaintenance CycleMaintenance { get; set; }

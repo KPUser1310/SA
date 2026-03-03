@@ -14,7 +14,7 @@ namespace SmartAttend.Domain.Entities
         public string WLAN_Password { get; set; }
         public string Pulse_Values { get; set; }
         public bool? Pulse_Freq { get; set; }
-        public int? IsUpdated { get; set; } = 0;
+        public int IsUpdated { get; set; } = 0;
         public string FTP_UserName { get; set; }
         public string FTP_Password { get; set; }
         public string ServerIPFirst { get; set; }
@@ -32,7 +32,8 @@ namespace SmartAttend.Domain.Entities
         public DateTime? ModifiedDate { get; set; }
         public DateTime? DeviceUpdatedDate { get; set; }
         public string ErrorLog { get; set; } 
-        public string FirmwareUpdateNo { get; set; } 
+        public string FirmwareUpdateNo { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceId))]
         public virtual Device Device { get; set; }

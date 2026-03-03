@@ -16,5 +16,6 @@ namespace SmartAttend.Domain.Entities
         public int AccountId { get; set; }
         public string DeviceToken { get; set; } = null!;
         public string DeviceType { get; set; } = null!;
+        public bool IsDelete { get; set; } = false;
     }
 }

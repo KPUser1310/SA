@@ -2,9 +2,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartAttend.Application.Common.DTOs;
+using SmartAttend.Application.Dashboard.Queries.Admin;
 using SmartAttend.Application.Handlers;
+using SmartAttend.Application.Parts.Commands;
+using SmartAttend.Application.Parts.DTOs;
 using SmartAttend.Domain.Entities;
 using SmartAttend.WebApi.Controllers;
+
 
 
 namespace SmartAttend.API.Controllers
@@ -18,19 +22,16 @@ namespace SmartAttend.API.Controllers
 
         }
 
-        [HttpGet("getPartList/{customerId}")]
+        [HttpGet("getPartList")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         //[Authorize]
-        public async Task<IActionResult> GetPartList(int customerId)
+        public async Task<IActionResult> GetPartList()
         {
-            if (customerId == 0)
-                return BadRequest("CustomerID cannot be zero.");
-
-            var query = new GetPartListQuery { CustomerId = customerId };
-            var response = await Mediator.Send(query);
+            
+            var response = await Mediator.Send(new GetPartListQuery());
 
             return Ok(response);
         }
@@ -51,21 +52,22 @@ namespace SmartAttend.API.Controllers
             return Ok(response);
         }
 
-        [HttpPut("updatePart")]
+        [HttpPost("updatePart")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdatePart([FromBody] AssignedPart model)
+        public async Task<IActionResult> UpdatePartAsync(UpdatePartDtos model)
         {
-            if (model == null)
+            if (model == null) 
                 return BadRequest("Model cannot be null.");
-
-            var command = new UpdatePartCommand { Model = model };
-            var response = await Mediator.Send(command);
-
-            return Ok(response);
+            var command = new UpdatePartCommand(model);
+          var response = await Mediator.Send(command); 
+            if (!response.IsSuccess) 
+                return BadRequest(response.Message); 
+            return Ok(response); 
         }
 
-        [HttpGet("getRemovePart/{id}")]
+
+            [HttpGet("getRemovePart/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -86,12 +88,12 @@ namespace SmartAttend.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> AddPart([FromBody] AssignedPart model)
+        public async Task<IActionResult> AddPart([FromBody] PartDtos model)
         {
             if (model == null)
                 return BadRequest("Model cannot be null.");
 
-            var command = new AddPartCommand { Model = model };
+            var command = new AddPartCommand(model);
             var response = await Mediator.Send(command);
 
             if (!response.IsSuccess)
@@ -99,6 +101,7 @@ namespace SmartAttend.API.Controllers
 
             return Ok(response);
         }
+
 
         [HttpDelete("removePart/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

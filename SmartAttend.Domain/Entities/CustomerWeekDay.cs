@@ -17,6 +17,7 @@ namespace SmartAttend.Domain.Entities
         public string Days { get; set; }
         public bool? Status { get; set; }
         public bool IsChanges { get; set; } = false;
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(CustomerId))]
         public Customer Customer { get; set; }

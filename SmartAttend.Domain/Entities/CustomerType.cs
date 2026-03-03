@@ -13,6 +13,7 @@ namespace SmartAttend.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CustomerTypeId { get; set; }
-        public string CustomerTypeName { get; set; }       
+        public string CustomerTypeName { get; set; }
+        public bool IsDelete { get; set; } = false;
     }
 }

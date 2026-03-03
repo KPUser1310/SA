@@ -14,6 +14,7 @@ namespace SmartAttend.Domain.Entities
         public int AccountId { get; set; }
         public DateTime CreatedDate { get; set; } 
         public DateTime? UpdatedDate { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }

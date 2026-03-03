@@ -32,12 +32,13 @@ namespace SmartAttend.Domain.Entities
         public DateTime? AssignedPartDate { get; set; }
         public int? Efficiency { get; set; }
         public int? QtyPercentage { get; set; }
-        public int? DowntimeDurationID { get; set; }
+        public int? DowntimeDurationId { get; set; }
         public string DowntimeDuration { get; set; }
         public int? DowntimePercentage { get; set; }
         public int GrossQty { get; set; } = 0;
         public int? BackupData { get; set; }
         public int? NotesId { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(PartId))]
         public virtual Part Part { get; set; }

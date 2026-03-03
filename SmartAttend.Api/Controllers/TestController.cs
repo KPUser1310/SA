@@ -25,8 +25,14 @@ namespace SmartAttend.WebApi.Controllers
         {
 
             var correlationId = HttpContext.Request.Headers["X-Correlation-ID"].ToString();
-           
+
             return Ok("GetSample added");
+        }
+
+        [HttpPut("UpdateSample")]
+        public async Task<IActionResult> UpdateSample([FromBody] SampleCreateCommand command, CancellationToken cancellationToken)
+        {
+            return Ok();
         }
     }
 }

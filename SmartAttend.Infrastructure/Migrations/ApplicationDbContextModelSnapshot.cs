@@ -62,7 +62,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool?>("IsDelete")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsDragAndDrop")
@@ -140,6 +140,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<DateTime?>("EndDateTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<bool?>("IsJobUpdated")
                         .HasColumnType("boolean");
@@ -222,7 +225,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("DowntimeDurationID")
+                    b.Property<int?>("DowntimeDurationId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("DowntimePercentage")
@@ -241,13 +244,16 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int>("GrossQty")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long?>("LastModifiedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<int?>("NotesID")
+                    b.Property<int?>("NotesId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("PartId")
@@ -327,7 +333,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("DowntimeDurationID")
+                    b.Property<int?>("DowntimeDurationId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("DowntimePercentage")
@@ -345,6 +351,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<int>("GrossQty")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -403,6 +412,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int?>("CustomerId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -441,6 +453,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<int>("IsApplied")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<bool?>("IsResetPartDate")
                         .HasColumnType("boolean");
@@ -485,7 +500,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
@@ -547,7 +562,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool?>("IsDelete")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
@@ -630,6 +645,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<bool>("IsCycletimeMilliSeconds")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsDownTimeDuration")
                         .HasColumnType("boolean");
 
@@ -694,6 +712,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<bool?>("Friday")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
@@ -763,6 +784,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -796,6 +820,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("IsChanges")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
@@ -837,7 +864,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
@@ -893,7 +920,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<long?>("DeviceId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<bool?>("IsNotify")
@@ -941,7 +968,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int>("CycleMaintenanceId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
@@ -1059,6 +1086,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsCycleTimeRequiredToShow")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<bool?>("IsEmailNotification")
@@ -1208,7 +1238,10 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("IsUpdated")
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("IsUpdated")
                         .HasColumnType("integer");
 
                     b.Property<int?>("MachineId")
@@ -1306,6 +1339,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("OFFDelay")
                         .IsRequired()
                         .HasColumnType("text");
@@ -1381,6 +1417,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<int>("Input8")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsProcessed")
                         .HasColumnType("boolean");
@@ -1468,6 +1507,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int>("Input8")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsProcessed")
                         .HasColumnType("boolean");
 
@@ -1524,7 +1566,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
@@ -1582,6 +1624,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<string>("InputName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsManual")
                         .HasColumnType("boolean");
@@ -1661,6 +1706,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsManual")
                         .HasColumnType("boolean");
 
@@ -1718,6 +1766,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int?>("DeviceDataMapId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("IsNotification")
                         .HasColumnType("integer");
 
@@ -1766,6 +1817,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<string>("InputName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("IsManual")
                         .HasColumnType("boolean");
@@ -1835,6 +1889,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsManual")
                         .HasColumnType("boolean");
 
@@ -1893,6 +1950,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -1924,6 +1984,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<int>("DeviceUserReportId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("UpdatedDae")
                         .HasColumnType("timestamp with time zone");
@@ -1963,7 +2026,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int?>("DeviceUserReportId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Message")
@@ -2028,7 +2091,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<bool>("DoubleClick")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<int?>("ShowId")
@@ -2072,6 +2135,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<string>("EntityType")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.HasKey("EmailAttachmentId");
 
                     b.HasIndex("EmailQueueId");
@@ -2104,6 +2170,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("IsAttachment")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<bool?>("IsSend")
@@ -2152,6 +2221,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<int?>("ShowId")
@@ -2203,6 +2275,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<string>("Input")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<bool?>("IsProcessed")
                         .HasColumnType("boolean");
 
@@ -2247,6 +2322,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<string>("Input")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -2285,7 +2363,10 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("IsUpdated")
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("IsUpdated")
                         .HasColumnType("integer");
 
                     b.Property<string>("MachineTypeName")
@@ -2338,9 +2419,6 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Active")
-                        .HasColumnType("numeric(3,0)");
-
                     b.Property<string>("Color")
                         .IsRequired()
                         .HasColumnType("text");
@@ -2355,6 +2433,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<int>("InputNo")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("MachineTypeId")
                         .HasColumnType("integer");
@@ -2417,10 +2498,10 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("IsNotify")
+                    b.Property<bool>("IsNotify")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Message")
@@ -2472,6 +2553,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<string>("InputName")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -2534,7 +2618,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<bool?>("IsNotify")
@@ -2586,6 +2670,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<bool>("Descending")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
@@ -2623,6 +2710,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<string>("GroupID")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -2677,9 +2767,12 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("GroupID")
+                    b.Property<string>("GroupId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -2718,9 +2811,6 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool?>("Active")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -2735,6 +2825,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<int?>("EntityType")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -2756,14 +2849,11 @@ namespace SmartAttend.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartAttend.Domain.Entities.PlannedShutdownDescriptionMaster", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
-
-                    b.Property<bool?>("Active")
-                        .HasColumnType("boolean");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -2771,7 +2861,10 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int?>("EntityType")
                         .HasColumnType("integer");
 
-                    b.HasKey("ID");
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
 
                     b.ToTable("PlannedShutdownDescriptionMasters", "public");
                 });
@@ -2801,6 +2894,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -2814,11 +2910,11 @@ namespace SmartAttend.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartAttend.Domain.Entities.QuickReportSetting", b =>
                 {
-                    b.Property<int>("QuickReportSettingID")
+                    b.Property<int>("QuickReportSettingId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("QuickReportSettingID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("QuickReportSettingId"));
 
                     b.Property<bool>("AvgCycle")
                         .HasColumnType("boolean");
@@ -2833,6 +2929,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool>("Description")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
@@ -2868,7 +2967,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.HasKey("QuickReportSettingID");
+                    b.HasKey("QuickReportSettingId");
 
                     b.HasIndex("UserId");
 
@@ -2934,6 +3033,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int>("GrossQty")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -2982,7 +3084,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.HasKey("ReportNotificationTypeId");
@@ -3014,6 +3116,9 @@ namespace SmartAttend.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<bool?>("DowntimeReasonReport")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
@@ -3074,7 +3179,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.HasKey("ReportTypeId");
@@ -3093,7 +3198,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.HasKey("ReportValueTypeId");
@@ -3121,7 +3226,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<long?>("DeviceId")
                         .HasColumnType("bigint");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
@@ -3171,6 +3276,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<bool>("IsChanges")
                         .HasColumnType("boolean");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsSchedulerUpdate")
                         .HasColumnType("boolean");
 
@@ -3213,6 +3321,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<DateTime?>("EndDateTime")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -3267,6 +3378,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<DateTime?>("EndDateTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -3308,6 +3422,12 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ScrapTypeId"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -3315,8 +3435,14 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("LastModifiedBy")
+                        .HasColumnType("bigint");
 
                     b.HasKey("ScrapTypeId");
 
@@ -3325,17 +3451,20 @@ namespace SmartAttend.Infrastructure.Migrations
 
             modelBuilder.Entity("SmartAttend.Domain.Entities.ServiceType", b =>
                 {
-                    b.Property<int>("ServiceID")
+                    b.Property<int>("ServiceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ServiceID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ServiceId"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("CreatedBy")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -3347,7 +3476,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("ServiceID");
+                    b.HasKey("ServiceId");
 
                     b.ToTable("ServiceType", "public");
                 });
@@ -3371,6 +3500,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -3399,6 +3531,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -3430,6 +3565,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<long>("DeviceId")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -3483,6 +3621,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int?>("ExpirtDays")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -3515,6 +3656,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("IsShutdown")
                         .HasColumnType("integer");
@@ -3583,6 +3727,9 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("IsShutdown")
                         .HasColumnType("integer");
@@ -3666,6 +3813,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<long?>("HourlyTarget")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -3705,7 +3855,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModifiedAt")

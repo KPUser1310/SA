@@ -7,8 +7,9 @@ namespace SmartAttend.Domain.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ServiceID { get; set; }
+        public int ServiceId { get; set; }
         public string ServiceTypeName { get; set; }
+        public bool IsDelete { get; set; } = false;
         public ICollection<Customer> Customers { get; set; } 
     }
 }

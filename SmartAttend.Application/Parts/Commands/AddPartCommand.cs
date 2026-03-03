@@ -1,17 +1,21 @@
 ﻿using MediatR;
-using SmartAttend.Application.Interfaces;
 using SmartAttend.Application.Common.DTOs;
-using SmartAttend.Domain.Entities;
+using SmartAttend.Application.Interfaces;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace SmartAttend.Application.Handlers
+namespace SmartAttend.Application.Parts.Commands
 {
-    // Command
     public class AddPartCommand : IRequest<PartResponseModel>
     {
-        public AssignedPart Model { get; set; }
-    }
+        public PartDtos Model { get; set; }
 
-    // Handler
+        public AddPartCommand(PartDtos model)
+        {
+            Model = model;
+        }
+    }
     public class AddPartHandler : IRequestHandler<AddPartCommand, PartResponseModel>
     {
         private readonly IPartService _partService;
@@ -26,7 +30,7 @@ namespace SmartAttend.Application.Handlers
             if (request.Model == null)
                 throw new ArgumentNullException(nameof(request.Model));
 
-            // Delegate to your existing service method
+            // Delegate to your service method
             return await _partService.AddPartAsync(request.Model);
         }
     }

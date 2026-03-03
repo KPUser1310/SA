@@ -51,7 +51,7 @@ namespace SmartAttend.Application.Users.Queries
                     VacationDateFrom = account.VacationDateFrom,
                     VacationDateTo = account.VacationDateTo,
                     IsVocationMode = account.IsVocationMode ?? false,
-                    IsDelete = account.IsDelete ?? false,
+                    IsDelete = account.IsDelete ,
                     Image = string.IsNullOrEmpty(account.Image)
                         ? string.Empty
                         : siteUrl + account.Image

@@ -36,6 +36,7 @@ namespace SmartAttend.Domain.Entities
         public DateTime? CheckDate { get; set; }
         public int Scrap { get; set; }
         public int GrossQty { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceDataId))]
         public virtual DeviceData DeviceData { get; set; }

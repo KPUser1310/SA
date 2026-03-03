@@ -27,6 +27,7 @@ namespace SmartAttend.Domain.Entities
         public bool? IsJobUpdated { get; set; }
         public DateTime? JobUpdatedTime { get; set; }
         public int? QtyPerSkid { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(AssignPartId))]
         public virtual AssignedPart AssignedPart { get; set; }

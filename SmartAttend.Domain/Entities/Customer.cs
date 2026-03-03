@@ -25,7 +25,7 @@ namespace SmartAttend.Domain.Entities
         public string Country { get; set; }
         public string Zip { get; set; }
         public string CustomerImage { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
         public int? TimeOffset { get; set; }
         public string TimeZone { get; set; }
 

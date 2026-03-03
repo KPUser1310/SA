@@ -27,6 +27,7 @@ namespace SmartAttend.Domain.Entities
         public DateTime? ScheduleMaxDate { get; set; }
         public bool IsSplited { get; set; } = false; 
         public int? NotesId { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(PartId))]
         public virtual Part Part { get; set; }

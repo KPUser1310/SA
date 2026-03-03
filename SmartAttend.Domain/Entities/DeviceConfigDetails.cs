@@ -33,6 +33,7 @@ namespace SmartAttend.Domain.Entities
         public bool InputPartReset { get; set; } = false;
         public long? DefaultTime { get; set; }
 
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceConfigId))]
         public virtual DeviceConfig DeviceConfig { get; set; }

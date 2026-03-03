@@ -24,6 +24,7 @@ namespace SmartAttend.Domain.Entities
         public bool IsAttachment { get; set; } = false; 
         public DateTime? CreatedDate { get; set; } 
         public DateTime? UpdatedDate { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceId))]
         public virtual Device Device { get; set; }

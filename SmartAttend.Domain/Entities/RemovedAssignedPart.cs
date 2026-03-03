@@ -37,6 +37,7 @@ namespace SmartAttend.Domain.Entities
         public int? DownTimePercentage { get; set; }
         public int GrossQty { get; set; } = 0;
         public int? BackupData { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(PartId))]
         public virtual Part Part { get; set; }

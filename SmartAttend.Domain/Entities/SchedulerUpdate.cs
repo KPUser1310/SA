@@ -18,6 +18,7 @@ namespace SmartAttend.Domain.Entities
         public bool IsSchedulerUpdate { get; set; }
         public bool IsChanges { get; set; }
         public bool IsUpdated { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }

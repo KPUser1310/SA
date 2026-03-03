@@ -21,6 +21,7 @@ namespace SmartAttend.Domain.Entities
         public string? ScrapReason { get; set; } 
         public string? Notes { get; set; }
         public string? UserName { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(PartId))]
         public virtual Part Part { get; set; }

@@ -17,6 +17,7 @@ namespace SmartAttend.Domain.Entities
         public bool Ascending { get; set; } = false; 
         public bool Descending { get; set; } = false; 
         public bool Customize { get; set; } = true;
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(AccountId))]
         public virtual Account Account { get; set; }

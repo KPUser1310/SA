@@ -9,9 +9,10 @@ namespace SmartAttend.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PartsHistoryId { get; set; }
         public int PartId { get; set; }
-        public string GroupID { get; set; }
+        public string GroupId { get; set; }
         public string PartNumber { get; set; }
         public int? Cavity { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal? CycleTime { get; set; }

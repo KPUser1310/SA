@@ -51,7 +51,7 @@ namespace SmartAttend.Application.Notifications.Commands
                     var result = await _context.DeviceDataUserMaps.Where(x => x.DeviceDataUserMapId == request.InputId).FirstOrDefaultAsync();
                     var device = await _context.Devices.Where(x => x.DeviceId == request.DeviceId).FirstOrDefaultAsync();
                     var devicedata = await _context.DeviceDatas.Where(x => x.DeviceId == request.DeviceId).OrderByDescending(x => x.Id).FirstOrDefaultAsync();
-                    var description = await _context.PlannedShutdownDescriptions.Where(x => x.Id == request.Description && x.DeviceId == request.DeviceId && x.Active == true).FirstOrDefaultAsync();
+                    var description = await _context.PlannedShutdownDescriptions.Where(x => x.Id == request.Description && x.DeviceId == request.DeviceId && !x.IsDelete).FirstOrDefaultAsync();
 
                     if (devicedata == null)
                     {
@@ -93,16 +93,16 @@ namespace SmartAttend.Application.Notifications.Commands
                                 return new PageResponse() { IsSuccess = false, Message = "assignPart is not found" };
                             }
 
-                            await HandlePlannedShutdownAsync(description.PlannedShutdownDescriptionMaster.ID, assignPart, cancellationToken);
+                            await HandlePlannedShutdownAsync(description.PlannedShutdownDescriptionMaster.Id, assignPart, cancellationToken);
 
 
                             var deviceDataUserMapIds = devicedatauserDetails.Select(x => x.DeviceDataUserMapId).ToList();
                             _ = await _context.Notifications
                                     .Where(x => deviceDataUserMapIds.Contains((int)x.DeviceDataUserMapId) &&
-                                                x.IsActive == true)
+                                                !x.IsDelete)
                                     .ExecuteUpdateAsync(
                                         update => update
-                                            .SetProperty(x => x.IsActive, false)
+                                            .SetProperty(x => x.IsDelete, true)
                                             .SetProperty(x => x.UpdatedDate, DateTime.Now),
                                         cancellationToken
                                     );
@@ -111,7 +111,7 @@ namespace SmartAttend.Application.Notifications.Commands
                             {
                                 item.IsNotification = request.MachineShutdown;
                                 item.UpdatedDate = DateTime.Now;
-                                item.DeviceDataMap.Device.DescriptionId = description.PlannedShutdownDescriptionMaster.ID;
+                                item.DeviceDataMap.Device.DescriptionId = description.PlannedShutdownDescriptionMaster.Id;
                                 item.DeviceDataMap.Device.Description = description.Description;
                                 item.DeviceDataMap.Device.IsPlanned = request.MachineShutdown;
                                 item.DeviceDataMap.Device.SinglePlannedDate = DateTime.Now;
@@ -212,9 +212,9 @@ namespace SmartAttend.Application.Notifications.Commands
                             await _context.Notifications
                                        .Where(x => x.DeviceDataUserMapId == request.InputId &&
                                                    x.AccountId == request.AccountId &&                                                 
-                                                   x.IsActive == true)
+                                                  !x.IsDelete)
                                        .ExecuteUpdateAsync(update => update
-                                           .SetProperty(x => x.IsActive, false)
+                                           .SetProperty(x => x.IsDelete, true)
                                            .SetProperty(x => x.UpdatedDate, DateTime.UtcNow),
                                            cancellationToken);
                         
@@ -244,16 +244,16 @@ namespace SmartAttend.Application.Notifications.Commands
                                 item.UpdatedDate = DateTime.Now;
                                 await _context.SaveChangesAsync();
 
-                                device.DescriptionId = description.PlannedShutdownDescriptionMaster.ID;
+                                device.DescriptionId = description.PlannedShutdownDescriptionMaster.Id;
                                 device.Description = description.Description;
                                 device.DownTimeDate = DateTime.Now;
                                 device.LastModifiedAt = DateTime.Now;
                                 await _context.SaveChangesAsync();
 
-                                var lstNotification = await _context.Notifications.Where(x => x.DeviceDataUserMapId == item.DeviceDataUserMapId && x.IsActive == true).ToListAsync();
+                                var lstNotification = await _context.Notifications.Where(x => x.DeviceDataUserMapId == item.DeviceDataUserMapId && !x.IsDelete).ToListAsync();
                                 foreach (var item_ in lstNotification)
                                 {
-                                    item_.IsActive = false;
+                                    item_.IsDelete = true;
                                     await _context.SaveChangesAsync();
                                 }
                             }
@@ -270,11 +270,11 @@ namespace SmartAttend.Application.Notifications.Commands
                                 {
                                     deviceTrk.Reasonprevious = "7";
                                     if (count == 0)
-                                        deviceTrk.CurrentShutdownMasterId = description.PlannedShutdownDescriptionMaster.ID;//Added for Plannedshutdown Description ID
+                                        deviceTrk.CurrentShutdownMasterId = description.PlannedShutdownDescriptionMaster.Id;//Added for Plannedshutdown Description ID
                                     else
                                     {
-                                        deviceTrk.CurrentShutdownMasterId = description.PlannedShutdownDescriptionMaster.ID;
-                                        deviceTrk.PlannedShutdownMasterId = description.PlannedShutdownDescriptionMaster.ID;
+                                        deviceTrk.CurrentShutdownMasterId = description.PlannedShutdownDescriptionMaster.Id;
+                                        deviceTrk.PlannedShutdownMasterId = description.PlannedShutdownDescriptionMaster.Id;
                                     }
                                     await _context.SaveChangesAsync();
                                     count++;
@@ -288,11 +288,11 @@ namespace SmartAttend.Application.Notifications.Commands
                                 {
                                     deviceTrkDay.Reasonprevious = "7";
                                     if (countDay == 0)
-                                        deviceTrkDay.CurrentShutdownMasterID = description.PlannedShutdownDescriptionMaster.ID;//Added for Plannedshutdown Description ID
+                                        deviceTrkDay.CurrentShutdownMasterID = description.PlannedShutdownDescriptionMaster.Id;//Added for Plannedshutdown Description ID
                                     else
                                     {
-                                        deviceTrkDay.CurrentShutdownMasterID = description.PlannedShutdownDescriptionMaster.ID;
-                                        deviceTrkDay.PlannedShutdownMasterID = description.PlannedShutdownDescriptionMaster.ID;
+                                        deviceTrkDay.CurrentShutdownMasterID = description.PlannedShutdownDescriptionMaster.Id;
+                                        deviceTrkDay.PlannedShutdownMasterID = description.PlannedShutdownDescriptionMaster.Id;
                                     }
                                     await _context.SaveChangesAsync();
                                     countDay++;
@@ -326,8 +326,8 @@ namespace SmartAttend.Application.Notifications.Commands
                 newItem1.Duration = 0;
                 newItem1.Reasoncurrent = "8";
                 newItem1.Reasonprevious = "8";
-                newItem1.CurrentShutdownMasterId = description.PlannedShutdownDescriptionMaster.ID;//Added for Plannedshutdown Description ID
-                newItem1.PlannedShutdownMasterId = description.PlannedShutdownDescriptionMaster.ID;//Added for Plannedshutdown Description ID
+                newItem1.CurrentShutdownMasterId = description.PlannedShutdownDescriptionMaster.Id;//Added for Plannedshutdown Description ID
+                newItem1.PlannedShutdownMasterId = description.PlannedShutdownDescriptionMaster.Id;//Added for Plannedshutdown Description ID
                 newItem1.Stopduration = GetDateTimeDiffence(startDate, roundDate);
                 newItem1.IsManual = true;
                 await _context.DeviceDataTrackings.AddAsync(newItem1);
@@ -397,9 +397,9 @@ namespace SmartAttend.Application.Notifications.Commands
                     .Where(x => x.DeviceId == deviceId &&
                                 x.AccountId == accountId &&
                                 x.EntityType == 2 &&
-                                x.IsActive == true)
+                                !x.IsDelete)
                     .ExecuteUpdateAsync(update => update
-                        .SetProperty(x => x.IsActive, false)
+                        .SetProperty(x => x.IsDelete, true)
                         .SetProperty(x => x.UpdatedDate, DateTime.UtcNow),
                         cancellationToken);
             }
@@ -433,10 +433,10 @@ namespace SmartAttend.Application.Notifications.Commands
                 foreach (var deviceTrk in deviceTrakingDetails)
                 {
                     deviceTrk.Reasonprevious = "8";
-                    deviceTrk.CurrentShutdownMasterId = description.PlannedShutdownDescriptionMaster.ID;
+                    deviceTrk.CurrentShutdownMasterId = description.PlannedShutdownDescriptionMaster.Id;
                     if (count > 0)
                     {
-                        deviceTrk.PlannedShutdownMasterId = description.PlannedShutdownDescriptionMaster.ID;
+                        deviceTrk.PlannedShutdownMasterId = description.PlannedShutdownDescriptionMaster.Id;
                     }
 
                     count++;
@@ -450,11 +450,11 @@ namespace SmartAttend.Application.Notifications.Commands
                 foreach (var deviceTrkDay in lstDeviceTrkDay)
                 {
                     deviceTrkDay.Reasonprevious = "8";
-                    deviceTrkDay.CurrentShutdownMasterID = description.PlannedShutdownDescriptionMaster.ID;
+                    deviceTrkDay.CurrentShutdownMasterID = description.PlannedShutdownDescriptionMaster.Id;
 
                     if (count1 > 0)
                     {
-                        deviceTrkDay.PlannedShutdownMasterID = description.PlannedShutdownDescriptionMaster.ID;
+                        deviceTrkDay.PlannedShutdownMasterID = description.PlannedShutdownDescriptionMaster.Id;
                     }
 
                     count1++;
@@ -528,7 +528,7 @@ namespace SmartAttend.Application.Notifications.Commands
                         AssignedPartDate = assignPart.AssignedPartDate,
                         Efficiency = assignPart.Efficiency,
                         QtyPercentage = assignPart.QtyPercentage,
-                        DowntimeDurationID = assignPart.DowntimeDurationID,
+                        DowntimeDurationId = assignPart.DowntimeDurationId,
                         DowntimeDuration = assignPart.DowntimeDuration,
                         DowntimePercentage = assignPart.DowntimePercentage,
                         CreatedAt = DateTime.UtcNow,
@@ -554,7 +554,7 @@ namespace SmartAttend.Application.Notifications.Commands
                 assignPart.Efficiency = 0;
                 assignPart.QtyPercentage = 0;
                 assignPart.AssignedPartDate = DateTime.UtcNow;
-                assignPart.DowntimeDurationID = 1;
+                assignPart.DowntimeDurationId = 1;
                 assignPart.DowntimeDuration = "00:00";
                 assignPart.DowntimePercentage = 0;
                 assignPart.LastModifiedAt = DateTime.UtcNow;

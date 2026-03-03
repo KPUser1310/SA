@@ -55,7 +55,7 @@ namespace SmartAttend.WebApi.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(NotificationDeviceResponseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(NotificationDeviceResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Route("NotificationCountByDeviceId/{accountId}")]
         public async Task<IActionResult> NotificationCountByDeviceId(int accountId, CancellationToken cancellationToken)
@@ -73,6 +73,38 @@ namespace SmartAttend.WebApi.Controllers
             var result = await Mediator.Send(new UpdateAllNotificationListCommand { AccountId = accountId }, cancellationToken);
             return Ok(result);
         }
+
+            [HttpPost("GetNotificationList")]
+        [ProducesResponseType(typeof(List<NotificationDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetNotificationList( GetNotificationListQuery request, CancellationToken cancellationToken)
+        {   
+            var result = await Mediator.Send(request, cancellationToken);
+            return Ok(result); 
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(NotificationDeviceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("DeviceList/{accountId}")]
+        public async Task<IActionResult> GetDeviceList(int accountId, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new GetNotificationCountbyDeviceIdQuery { AccountId = accountId }, cancellationToken);
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(DeviceResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("GetIndividualDevice/{CustomerId}")]
+        public async Task<IActionResult> GetIndividualDevice(int CustomerId, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new GetIndividualDeviceQuery { CustomerId = CustomerId }, cancellationToken);
+            return Ok(result);
+        }
+
+
+
 
     }
 }

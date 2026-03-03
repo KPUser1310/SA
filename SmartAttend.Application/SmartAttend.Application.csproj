@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resource\GetAccountData1.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SmartAttend.Domain\SmartAttend.Domain.csproj" />
   </ItemGroup>
 

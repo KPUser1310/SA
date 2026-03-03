@@ -92,11 +92,11 @@ namespace SmartAttend.Application.Users.Commands
                 // VACATION MODE EFFECT
                 if (model.IsVocationMode)
                 {
-                    var notifications = await _context.Notifications.Where(x => x.AccountId == model.AccountId && x.IsActive == true).ToListAsync(cancellationToken);
+                    var notifications = await _context.Notifications.Where(x => x.AccountId == model.AccountId && !x.IsDelete).ToListAsync(cancellationToken);
 
                     if (notifications.Count > 0)
                     {
-                        notifications.ForEach(n => n.IsActive = false);
+                        notifications.ForEach(n => n.IsDelete = true);
                         await _context.SaveChangesAsync(cancellationToken);
                     }
                 }

@@ -20,6 +20,7 @@ namespace SmartAttend.Domain.Entities
         public string InputName { get; set; }
         public int ReasonId { get; set; }
         public string Reason { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceId))]
         public virtual Device Device { get; set; }

@@ -18,8 +18,8 @@ namespace SmartAttend.Domain.Entities
         public string? ContactToHours { get; set; }
         public int? Reminder { get; set; }
         public DateTime? SentDate { get; set; }
-        public bool? IsNotify { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsNotify { get; set; }
+        public bool IsDelete { get; set; } = false;
         public int? EntityType { get; set; } = 1;     
         public string? CompletedReason { get; set; }
         public DateTime? CreatedDate { get; set; }

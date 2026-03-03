@@ -20,7 +20,7 @@ namespace SmartAttend.Domain.Entities
         public int? Reminder { get; set; }
         public DateTime? SentDate { get; set; }
         public bool? IsNotify { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceId))]
         public virtual Device Device { get; set; }

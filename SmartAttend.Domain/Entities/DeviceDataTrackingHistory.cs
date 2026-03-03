@@ -31,7 +31,8 @@ namespace SmartAttend.Domain.Entities
         public int? CompletedQuantity { get; set; }
         public double? CycleDuration { get; set; }
         public int? Efficiency { get; set; }
-        public string? DowntimeReason { get; set; } 
+        public string? DowntimeReason { get; set; }
+        public bool IsDelete { get; set; } = false;
         public DateTime? DtUpdatedTime { get; set; }
         [ForeignKey(nameof(DeviceDataId))]
         public virtual DeviceData DeviceData { get; set; }

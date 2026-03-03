@@ -24,7 +24,7 @@ namespace SmartAttend.Application.Handlers
 
         public async Task<PartResponseModel> Handle(GetPartListQuery request, CancellationToken cancellationToken)
         {
-            return await _partService.GetPartListAsync(request.CustomerId);
+            return await _partService.GetPartListAsync();
         }
     }
 }

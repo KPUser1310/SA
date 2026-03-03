@@ -14,7 +14,7 @@ namespace SmartAttend.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ReportTypeId { get; set; }
         public string Description { get; set; } = null!;
-        public bool IsActive { get; set; }
+        public bool IsDelete { get; set; } = false;
         public ICollection<DeviceUserReportMap> DeviceUserReportMaps { get; set; }
     }
 }

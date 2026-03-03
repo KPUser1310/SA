@@ -14,6 +14,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(
         builder.Configuration.GetSection("AzureAd"));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigins",
+    builder =>
+    {
+        builder.AllowAnyOrigin() 
+               .AllowAnyHeader() 
+               .AllowAnyMethod(); 
+    });
+});
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
@@ -83,6 +94,7 @@ if (app.Environment.IsDevelopment())
 app.UseSwagger();
 app.UseSwaggerUI();
 //app.UseHttpsRedirection();
+app.UseCors("AllowOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();

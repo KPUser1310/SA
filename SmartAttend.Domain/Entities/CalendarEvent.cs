@@ -15,6 +15,7 @@ namespace SmartAttend.Domain.Entities
         public int CalendarEventId { get; set; }
         public int? CustomerId { get; set; }
         public DateTime? StartDate { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }

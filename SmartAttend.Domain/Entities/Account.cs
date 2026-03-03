@@ -22,7 +22,7 @@ namespace SmartAttend.Domain.Entities
         public DateTime? VacationDateFrom { get; set; }
         public DateTime? VacationDateTo { get; set; }
         public bool IsEmailNotification { get; set; } = false;
-        public bool? IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
         public string Image { get; set; }  
         public bool IsDragAndDrop { get; set; } = false;
         public string? AzureObjectId { get; set; }

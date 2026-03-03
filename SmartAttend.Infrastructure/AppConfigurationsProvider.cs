@@ -38,6 +38,7 @@ namespace SmartAttend.Infrastructure
             {
                 connBuilder.Password = _configuration.GetValue<string>("SmartAttend:PGPassword");
             }
+            connBuilder.IncludeErrorDetail = true;
 
             return connBuilder.ConnectionString;
         }

@@ -14,15 +14,14 @@ namespace SmartAttend.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int MachineTypeId { get; set; }
-        public int InputNo { get; set; }
-        [Column(TypeName = "numeric(3,0)")]
-        public int Active { get; set; }
+        public int InputNo { get; set; }        
         public string Name { get; set; } 
         public string Priority { get; set; } 
         public string Color { get; set; }
         public string FlashSpeed { get; set; } 
         public string Sound { get; set; } 
         public string Delay { get; set; }
+        public bool IsDelete { get; set; } = false;
 
 
         [ForeignKey(nameof(MachineTypeId))]

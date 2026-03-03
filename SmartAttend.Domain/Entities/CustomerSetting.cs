@@ -28,6 +28,8 @@ namespace SmartAttend.Domain.Entities
         public bool LastCounterCycleTime { get; set; } = false;
         public bool ResetAssingnedPartDate { get; set; } = false;
 
+        public bool IsDelete { get; set; } = false;
+
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }
     }

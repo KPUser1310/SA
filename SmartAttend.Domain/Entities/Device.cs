@@ -60,6 +60,7 @@ namespace SmartAttend.Domain.Entities
         public bool ShowCheck { get; set; } = false;
         public string LastCounterCycleTime { get; set; }
         public int? LastCounterEfficiency { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }

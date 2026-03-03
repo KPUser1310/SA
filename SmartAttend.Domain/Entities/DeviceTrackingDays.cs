@@ -29,6 +29,7 @@ namespace SmartAttend.Domain.Entities
         public int? PlannedShutdownMasterID { get; set; }
         public double? Stopduration { get; set; }
         public bool IsManual { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceId))]
         public virtual Device Device { get; set; }

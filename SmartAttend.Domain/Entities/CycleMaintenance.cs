@@ -15,7 +15,7 @@ namespace SmartAttend.Domain.Entities
         public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public int MaintenanceCount { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceId))]
         public virtual Device Device { get; set; }

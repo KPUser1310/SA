@@ -23,6 +23,7 @@ namespace SmartAttend.Domain.Entities
         public int? QtyPerSkid { get; set; } = 0;
         public decimal? ScrapPrice { get; set; }
         public int? CustomerId { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }

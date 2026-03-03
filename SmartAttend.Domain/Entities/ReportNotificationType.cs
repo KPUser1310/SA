@@ -13,8 +13,8 @@ namespace SmartAttend.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ReportNotificationTypeId { get; set; }    
-        public string Description { get; set; }   
-        public bool IsActive { get; set; }
+        public string Description { get; set; }
+        public bool IsDelete { get; set; } = false;
         public ICollection<DeviceUserReportMap> DeviceUserReportMaps { get; set; }
     }
 }

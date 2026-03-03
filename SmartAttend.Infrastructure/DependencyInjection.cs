@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmartAttend.Application.Common.Inferfaces;
+using SmartAttend.Application.Interface;
 using SmartAttend.Application.Interfaces;
 using SmartAttend.Infrastructure.Persistence;
 using SmartAttend.Infrastructure.Services;
+using SmartAttend.Infrastructure.Services.Notifications;
 
 namespace SmartAttend.Infrastructure
 {
@@ -31,6 +33,7 @@ namespace SmartAttend.Infrastructure
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
             services.AddScoped<IPartService, PartService>();
 
+
             services.AddServiceDependency(configuration);
             // Map interface to concrete DbContext
 
@@ -41,6 +44,7 @@ namespace SmartAttend.Infrastructure
         {
             // Register your service
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<INotification, NotificationService>();
         }
     }
 }

@@ -35,6 +35,7 @@ namespace SmartAttend.Domain.Entities
         public int Scrap { get; set; }
         public int GrossQty { get; set; }
         public bool IsTrackingDay { get; set; } = false;
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceId))]
         public virtual Device Device { get; set; }

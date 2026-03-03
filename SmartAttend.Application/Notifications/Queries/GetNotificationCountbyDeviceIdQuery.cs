@@ -1,18 +1,17 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 using SmartAttend.Application.Common.Inferfaces;
 using SmartAttend.Application.Notifications.DTOs;
 using SmartAttend.Domain.Entities;
 
 namespace SmartAttend.Application.Notifications.Queries
 {
-    public class GetNotificationCountbyDeviceIdQuery : IRequest<NotificationDeviceResponseModel>
+    public class GetNotificationCountbyDeviceIdQuery : IRequest<NotificationDeviceResponse>
     {
         public int AccountId { get; set; }
     }
 
-    public class GetNotificationCountbyDeviceIdHandler : IRequestHandler<GetNotificationCountbyDeviceIdQuery, NotificationDeviceResponseModel>
+    public class GetNotificationCountbyDeviceIdHandler : IRequestHandler<GetNotificationCountbyDeviceIdQuery, NotificationDeviceResponse>
     {
         private readonly IApplicationDbContext _context;
         public GetNotificationCountbyDeviceIdHandler(IApplicationDbContext context)
@@ -20,10 +19,10 @@ namespace SmartAttend.Application.Notifications.Queries
             _context = context;
         }
 
-        public async Task<NotificationDeviceResponseModel> Handle(GetNotificationCountbyDeviceIdQuery request, CancellationToken cancellationToken)
+        public async Task<NotificationDeviceResponse> Handle(GetNotificationCountbyDeviceIdQuery request, CancellationToken cancellationToken)
         {
-            NotificationDeviceResponseModel notifyCountbyDevice = new NotificationDeviceResponseModel();
-            List<NotificationCount> notificationList = new List<NotificationCount>();
+            NotificationDeviceResponse notifyCountbyDevice = new NotificationDeviceResponse();
+            List<NotificationDetails> notificationList = new List<NotificationDetails>();
             try
             {
                 var result = await (from note in _context.Notifications.AsNoTracking()
@@ -34,7 +33,7 @@ namespace SmartAttend.Application.Notifications.Queries
 
                 if(result == null || !result.Any())
                 {
-                    return new NotificationDeviceResponseModel() { IsSuccess = false };
+                    return new NotificationDeviceResponse() { IsSuccess = false };
                 }
 
                 var deviceIds =  result.Select(x => x.DeviceId).ToList();
@@ -54,7 +53,7 @@ namespace SmartAttend.Application.Notifications.Queries
 
                 foreach(var item in result)
                 {
-                    NotificationCount notification = new NotificationCount();
+                    NotificationDetails notification = new NotificationDetails();
                     var color =  GetNotificationColor(item, deviceDataMapInput);
                     notification.Id = item.Id;
                     notification.DeviceName = item.Device.DeviceName;

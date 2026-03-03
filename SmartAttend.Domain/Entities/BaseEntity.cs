@@ -10,7 +10,8 @@ namespace SmartAttend.Domain.Entities
     {
         public DateTime CreatedAt { get;  set; }
         public long CreatedBy { get; set; }
-        public DateTime? LastModifiedAt { get;  set; } = DateTime.Now;
+        public DateTime? LastModifiedAt { get; set; }
         public long? LastModifiedBy { get; set; }
+       
     }
 }

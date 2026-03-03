@@ -16,7 +16,7 @@ namespace SmartAttend.Domain.Entities
         public string? ToolingNumber { get; set; } 
         public int PartId { get; set; }
         public int CustomerId { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(PartId))]
         public virtual Part Part { get; set; }

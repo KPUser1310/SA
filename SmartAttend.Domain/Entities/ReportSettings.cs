@@ -28,6 +28,7 @@ namespace SmartAttend.Domain.Entities
         public bool? DailyRevenueReport { get; set; } = false;
         public bool? MonthlyRevenueReport { get; set; } = false;
         public bool? ProductionReport { get; set; } = false;
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(UserId))]
         public virtual Account Account { get; set; }

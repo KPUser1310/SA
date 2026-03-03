@@ -16,6 +16,7 @@ namespace SmartAttend.Domain.Entities
         public int? AccountId { get; set; }
         public string? AuthToken { get; set; }
         public int? ExpirtDays { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(AccountId))]
         public virtual Account Account { get; set; }

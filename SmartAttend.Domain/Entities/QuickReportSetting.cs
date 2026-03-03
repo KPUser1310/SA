@@ -12,7 +12,7 @@ namespace SmartAttend.Domain.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int QuickReportSettingID { get; set; }
+        public int QuickReportSettingId { get; set; }
         public int UserId { get; set; }
         public bool Description { get; set; } = true;
         public bool ProductionHours { get; set; } = true;
@@ -25,6 +25,7 @@ namespace SmartAttend.Domain.Entities
         public bool TotalValue { get; set; } = true;
         public bool CycleEfficiency { get; set; } = true;
         public bool ScrapValue { get; set; } = false;
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(UserId))]
         public virtual Account Account { get; set; }

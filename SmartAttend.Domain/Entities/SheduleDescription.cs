@@ -14,6 +14,7 @@ namespace SmartAttend.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ScheduleDescriptionId { get; set; }
         public string? Description { get; set; }
-        public string? CustomerIDs { get; set; } 
+        public string? CustomerIDs { get; set; }
+        public bool IsDelete { get; set; } = false;
     }
 }

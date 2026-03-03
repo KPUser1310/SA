@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using SmartAttend.Application.Common.DTOs;
 using SmartAttend.Application.Common.Inferfaces;
 using SmartAttend.Application.Interfaces;
+using SmartAttend.Application.Parts.DTOs;
 using SmartAttend.Domain.Entities;
 
 namespace SmartAttend.Infrastructure.Services
@@ -10,42 +12,30 @@ namespace SmartAttend.Infrastructure.Services
     {
         private readonly IApplicationDbContext _dbContext;
 
+        private readonly ICurrentUserService _currentUserService;
         public PartService(IApplicationDbContext dbContext) { _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext)); }
-        public async Task<PartResponseModel> GetPartListAsync(int customerId)
+        public async Task<PartResponseModel> GetPartListAsync()
         {
             var response = new PartResponseModel();
+            response.lstPart = new List<Part>();
 
             try
             {
-                var partModel = await (
-                    from asspart in _dbContext.AssignedParts
-                    join device in _dbContext.Devices on asspart.DeviceId equals device.DeviceId
-                    join part in _dbContext.Parts on asspart.PartId equals part.PartId
-                    where device.CustomerId == customerId
-                          && asspart.Status == true
-                          && device.IsActive == true
-                    orderby device.DeviceName
-                    select new AssignedPartsModel
-                    {
-                        Id = asspart.Id,
-                        PartId = asspart.PartId ?? 0,
-                        PartNumber = part.PartNumber ?? string.Empty,
-                        DeviceName = device.DeviceName ?? asspart.DeviceId.ToString(),
-                        GroupID = part.GroupID ?? string.Empty,
-                        Cavity = asspart.Cavity ?? 0,
-                        CycleTime = asspart.CycleTime.ToString() ?? string.Empty,
-                        Scrap = asspart.Scrap ?? 0,
-                        GrossQty = asspart.GrossQty,
-                        StartDateTime = asspart.StartDateTime.HasValue
-                                        ? asspart.StartDateTime.Value.ToString("MM-dd-yyyy HH:mm:ss")
-                                        : null,
-                        RequiredQuantity = asspart.RequiredQuantity ?? 0
-                    }
-                ).ToListAsync();
+                var parts = await _dbContext.Parts
+                    .OrderByDescending(p => p.CreatedAt)   // Assuming CreatedAt exists in Part
+                    .ToListAsync();
 
-                response.IsSuccess = true;
-                response.Message = "Parts Assigned List";
-                response.LstAssignedPartModel = partModel;
+                if (parts.Any())
+                {
+                    response.IsSuccess = true;
+                    response.Message = "Parts list retrieved successfully";
+                    response.lstPart = parts;
+                }
+                else
+                {
+                    response.IsSuccess = false;
+                    response.Message = "No parts found";
+                }
             }
             catch (Exception ex)
             {
@@ -102,92 +92,55 @@ namespace SmartAttend.Infrastructure.Services
                 response.Message = "Error retrieving AssignedPart";
                 response.assignedPart = null;
             }
-
             return response;
         }
 
-
-        public async Task<PartResponseModel> UpdatePartAsync(AssignedPart model)
+        public async Task<PartResponseModel> UpdatePartAsync(UpdatePartDtos dto)
         {
             var response = new PartResponseModel();
 
             try
             {
-                DateTime currentDate = DateTime.Now;
+                var existingPart = await _dbContext.Parts
+                    .FirstOrDefaultAsync(x => x.PartId == dto.PartId);
 
-                var assignedParts = await _dbContext.AssignedParts.FirstOrDefaultAsync(x => x.Id == model.Id);
-
-                if (assignedParts == null)
+                if (existingPart == null)
                 {
                     response.IsSuccess = false;
-                    response.Message = "AssignedPart not found.";
+                    response.Message = "Part not found.";
+                    response.PartId = dto.PartId;
                     return response;
                 }
 
-                // Update fields safely
-                assignedParts.PartId = model.PartId;
-                assignedParts.DeviceId = model.DeviceId;
-                assignedParts.Cavity = model.Cavity;
-                assignedParts.CycleTime = model.CycleTime;
-                assignedParts.RequiredQuantity = model.RequiredQuantity;
-
-                // Scrap and CurrentScrap are nullable → safe with ??
-                assignedParts.CurrentScrap = (assignedParts.CurrentScrap ?? 0) + (model.CurrentScrap ?? 0);
-                assignedParts.Scrap = (assignedParts.Scrap ?? 0) + (model.Scrap ?? 0);
-
-                assignedParts.AssignedPartDate ??= currentDate;
-                assignedParts.StartDateTime ??= currentDate;
-
-                // GrossQty is non-nullable int → just add directly
-                assignedParts.GrossQty += model.GrossQty;
+                // Update fields
+                existingPart.PartNumber = dto.PartNumber ?? existingPart.PartNumber;
+                existingPart.GroupID = dto.GroupID ?? existingPart.GroupID;
+                existingPart.Cavity = dto.Cavity ?? existingPart.Cavity;
+                existingPart.CycleTime = dto.CycleTime ?? existingPart.CycleTime;
+                existingPart.Description = dto.Description ?? existingPart.Description;
+                existingPart.PartPrice = dto.PartPrice ?? existingPart.PartPrice;
+                existingPart.ScrapPrice = dto.ScrapPrice ?? existingPart.ScrapPrice;
+                existingPart.LastModifiedBy = _currentUserService?.AccountId ?? 0;
+                existingPart.LastModifiedAt = DateTime.UtcNow;
 
                 await _dbContext.SaveChangesAsync();
 
-                // Update related DeviceData
-                var deviceData = await _dbContext.DeviceDatas
-                    .Where(x => x.DeviceId == assignedParts.DeviceId && x.DateTime < currentDate)
-                    .OrderByDescending(x => x.Id)
-                    .FirstOrDefaultAsync();
-
-                if (deviceData != null)
-                {
-                    // Scrap is int? in DeviceData → safe with ??
-                    deviceData.Scrap += (model.CurrentScrap ?? 0);
-
-                    // GrossQty is int → just add directly
-                    deviceData.GrossQty += model.GrossQty;
-
-                    await _dbContext.SaveChangesAsync();
-                }
-
-                // Update DeviceUserReportMap
-                if (model.DeviceId > 0)
-                {
-                    var userReportMaps = await _dbContext.DeviceUserReportMaps
-                        .Where(c => c.DeviceId == model.DeviceId)
-                        .ToListAsync();
-
-                    if (userReportMaps.Any())
-                    {
-                        foreach (var item in userReportMaps)
-                        {
-                            item.IsActive = true;
-                        }
-                        await _dbContext.SaveChangesAsync();
-                    }
-                }
-
                 response.IsSuccess = true;
-                response.Message = "Updated Successfully";
+                response.Message = "Part updated successfully";
+                response.PartId = existingPart.PartId;
             }
             catch (Exception ex)
             {
                 response.IsSuccess = false;
                 response.Message = $"Error updating part: {ex.Message}";
+                response.PartId = dto.PartId;
             }
 
             return response;
         }
+
+
+
 
         public async Task<PartResponseModel> GetRemovePartAsync(int id)
 
@@ -226,7 +179,7 @@ namespace SmartAttend.Infrastructure.Services
                     AssignedPartDate = assignedParts.AssignedPartDate,
                     Efficiency = assignedParts.Efficiency,
                     QtyPercentage = assignedParts.QtyPercentage,
-                    DowntimeDurationID = assignedParts.DowntimeDurationID,
+                    DowntimeDurationId = assignedParts.DowntimeDurationId,
                     DowntimeDuration = assignedParts.DowntimeDuration,
                     DowntimePercentage = assignedParts.DowntimePercentage,
                     CreatedAt = DateTime.Now,
@@ -256,7 +209,7 @@ namespace SmartAttend.Infrastructure.Services
                     AssignedPartDate = assignedParts.AssignedPartDate,
                     Efficiency = assignedParts.Efficiency,
                     QtyPercentage = assignedParts.QtyPercentage,
-                    DownTimeDurationId = assignedParts.DowntimeDurationID,
+                    DownTimeDurationId = assignedParts.DowntimeDurationId,
                     DowntimeDuration = assignedParts.DowntimeDuration,
                     DownTimePercentage = assignedParts.DowntimePercentage,
                     GrossQty = assignedParts.GrossQty,
@@ -316,7 +269,7 @@ namespace SmartAttend.Infrastructure.Services
                 assignedParts.Status = true;
                 assignedParts.Efficiency = 0;
                 assignedParts.QtyPercentage = 0;
-                assignedParts.DowntimeDurationID = 1;
+                assignedParts.DowntimeDurationId = 1;
                 assignedParts.DowntimeDuration = "00:00";
                 assignedParts.GrossQty = 0;
                 assignedParts.AssignedPartDate = null;
@@ -352,65 +305,35 @@ namespace SmartAttend.Infrastructure.Services
 
             return response;
         }
-        public async Task<PartResponseModel> AddPartAsync(AssignedPart model)
+        public async Task<PartResponseModel> AddPartAsync(PartDtos dto)
         {
             var response = new PartResponseModel();
 
             try
             {
-                DateTime currentDate = DateTime.Now;
-
-                // Initialize new AssignedPart
-                var newPart = new AssignedPart
+                // Map DTO to Entity
+                var newPart = new Part
                 {
-                    PartId = model.PartId,
-                    DeviceId = model.DeviceId,
-                    Cavity = model.Cavity,
-                    CycleTime = model.CycleTime,
-                    RequiredQuantity = model.RequiredQuantity,
-                    CurrentScrap = model.CurrentScrap ?? 0,
-                    Scrap = model.Scrap ?? 0,
-                    AssignedPartDate = currentDate,
-                    StartDateTime = currentDate,
-                    GrossQty = model.GrossQty
+                    PartNumber = dto.PartNumber,
+                    GroupID = dto.GroupID,
+                    Cavity = dto.Cavity ?? 0,
+                    CycleTime = dto.CycleTime ?? 0,
+                    Description = dto.Description,
+                    PartPrice = dto.PartPrice ?? 0,
+                    ScrapPrice = dto.ScrapPrice ?? 0,
+                    CreatedAt = DateTime.UtcNow,
+                    CreatedBy = _currentUserService?.AccountId ?? 0,
+                    LastModifiedBy = _currentUserService?.AccountId ?? 0,
+                    LastModifiedAt = DateTime.UtcNow,
+                    
                 };
 
-                await _dbContext.AssignedParts.AddAsync(newPart);
+                await _dbContext.Parts.AddAsync(newPart);
                 await _dbContext.SaveChangesAsync();
-
-                // Update related DeviceData
-                var deviceData = await _dbContext.DeviceDatas
-                    .Where(x => x.DeviceId == newPart.DeviceId && x.DateTime < currentDate)
-                    .OrderByDescending(x => x.Id)
-                    .FirstOrDefaultAsync();
-
-                if (deviceData != null)
-                {
-                    deviceData.Scrap += (model.CurrentScrap ?? 0);
-                    deviceData.GrossQty += model.GrossQty;
-                    await _dbContext.SaveChangesAsync();
-                }
-
-                // Update DeviceUserReportMap
-                if (model.DeviceId > 0)
-                {
-                    var userReportMaps = await _dbContext.DeviceUserReportMaps
-                        .Where(c => c.DeviceId == model.DeviceId)
-                        .ToListAsync();
-
-                    if (userReportMaps.Any())
-                    {
-                        foreach (var item in userReportMaps)
-                        {
-                            item.IsActive = true;
-                        }
-                        await _dbContext.SaveChangesAsync();
-                    }
-                }
 
                 response.IsSuccess = true;
                 response.Message = "Part added successfully";
-                response.PartId = newPart.Id;
+                response.PartId = newPart.PartId;
             }
             catch (Exception ex)
             {
@@ -420,13 +343,15 @@ namespace SmartAttend.Infrastructure.Services
 
             return response;
         }
+
+
         public async Task<PartResponseModel> RemovePartAsync(int id)
         {
             var response = new PartResponseModel();
 
             try
             {
-                var part = await _dbContext.AssignedParts.FindAsync(id);
+                var part = await _dbContext.Parts.FindAsync(id);
 
                 if (part == null)
                 {
@@ -435,7 +360,7 @@ namespace SmartAttend.Infrastructure.Services
                     return response;
                 }
 
-                _dbContext.AssignedParts.Remove(part);
+                _dbContext.Parts.Remove(part);
                 await _dbContext.SaveChangesAsync();
                  
                 response.IsSuccess = true;
@@ -453,49 +378,37 @@ namespace SmartAttend.Infrastructure.Services
         public async Task<PartResponseModel> GetPartByIdAsync(int id)
         {
             var response = new PartResponseModel();
-
+            response.lstPart = new List<Part>();
             try
             {
-                var part = await _dbContext.AssignedParts
-                    .Include(x => x.Part)   
-                    .Include(x => x.Device) 
-                    .FirstOrDefaultAsync(x => x.Id == id);
+                var part = await _dbContext.Parts
+                    .FirstOrDefaultAsync(x => x.PartId == id);
 
                 if (part != null)
                 {
                     response.IsSuccess = true;
                     response.Message = "Part retrieved successfully";
+                    response.lstPart.Add(part);
 
-                    response.assignedPart = new AssignedPart
-                    {
-                        Id = part.Id,
-                        PartId = part.PartId,
-                        DeviceId = part.DeviceId,
-                        CycleTime = part.CycleTime,
-                        RequiredQuantity = part.RequiredQuantity,
-                        Cavity = part.Cavity,
-                        Scrap = part.Scrap,
-                        CurrentScrap = part.CurrentScrap,
-                        GrossQty = part.GrossQty,
-                        Part = part.Part,
-                        Device = part.Device
-                    };
+                    
+                    response.PartId = part.PartId;
                 }
                 else
                 {
                     response.IsSuccess = false;
                     response.Message = "Part not found";
-                    response.assignedPart = null;
+                    response.PartId = id;
                 }
             }
             catch (Exception ex)
             {
                 response.IsSuccess = false;
                 response.Message = $"Error retrieving part: {ex.Message}";
-                response.assignedPart = null;
+                response.PartId = id;
             }
 
             return response;
         }
+
     }
 }

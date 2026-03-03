@@ -18,7 +18,7 @@ namespace SmartAttend.Domain.Entities
         public string WLAN_SSId { get; set; }
         public string WLAN_Password { get; set; }
         public bool? Pulse_Freq { get; set; }
-        public int? IsUpdated { get; set; }
+        public int IsUpdated { get; set; }
         public string FTP_UserName { get; set; }
         public string FTP_Password { get; set; }
         public bool? Firm_Update_Required { get; set; }
@@ -28,6 +28,7 @@ namespace SmartAttend.Domain.Entities
         public string PortFirst { get; set; }
         public string PortSecond { get; set; }
         public string HostName { get; set; }
+        public bool IsDelete { get; set; } = false;
 
 
         [ForeignKey(nameof(CustomerId))]

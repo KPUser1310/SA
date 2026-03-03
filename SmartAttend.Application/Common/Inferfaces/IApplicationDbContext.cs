@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using SmartAttend.Domain.Entities;
 
 
@@ -72,6 +73,9 @@ namespace SmartAttend.Application.Common.Inferfaces
         public DbSet<ToolingIds> ToolingIds { get; set; }
         public DbSet<WorkingDays> WorkingDays { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
+        DatabaseFacade Database { get; }
+
+
 
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

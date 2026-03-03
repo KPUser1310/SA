@@ -20,8 +20,8 @@ namespace SmartAttend.Domain.Entities
         [Column("Y-Postion")]
         public int? YPostion { get; set; }  
         public int? ShowId { get; set; }    
-        public long? DeviceId { get; set; } 
-        public bool IsActive { get; set; } = false; 
+        public long? DeviceId { get; set; }
+        public bool IsDelete { get; set; } = false;
         public bool DoubleClick { get; set; } = false; 
         public string? DeviceName { get; set; }
 

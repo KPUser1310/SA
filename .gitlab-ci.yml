@@ -1,0 +1,165 @@
+variables:
+  BUILD_CONFIGURATION: "Release"
+ 
+stages:
+  - build
+  - deploy
+ 
+# ---------------------------------
+# BUILD STAGE
+# ---------------------------------
+build_solution:
+  stage: build
+  tags:
+    - windows
+  rules:
+    - if: $CI_COMMIT_BRANCH
+  script:
+    - dotnet restore SmartAttend.sln
+    - dotnet build SmartAttend.sln -c $env:BUILD_CONFIGURATION --no-restore
+ 
+    # Publish AppGateway
+    - dotnet publish AppGateway/AppGateway.csproj -c $env:BUILD_CONFIGURATION -o publish/AppGateway
+ 
+    # Publish Admin project into Admin folder
+    - dotnet publish SmartAttend.Api/SmartAttend.Admin.csproj -c $env:BUILD_CONFIGURATION -o publish/AppGateway/admin
+ 
+  artifacts:
+    paths:
+      - publish/AppGateway/
+    expire_in: 1 day
+ 
+ 
+# ---------------------------------
+# DEPLOY STAGE
+# ---------------------------------
+# deploy_appgateway:
+#   stage: deploy
+#   tags:
+#     - windows
+#   needs:
+#     - job: build_solution
+#       artifacts: true
+#   rules:
+#     - if: '$CI_COMMIT_BRANCH == "main"'
+#       when: manual
+#     - when: never
+ 
+#   script: |
+#     $ErrorActionPreference = 'Stop'
+ 
+#     # ----------------------------
+#     # FTP CONFIGURATION
+#     # ----------------------------
+#     $ftpServer = $env:FTP_HOST
+#     $ftpPort   = 21
+#     $username  = $env:FTP_USERNAME
+#     $password  = $env:FTP_PASSWORD
+ 
+#     # IMPORTANT: matches your working manual script
+#     $ftpRoot   = "/gateway-smartattend.colanonline.net/Testing"
+ 
+#     $basePath = (Resolve-Path "publish/AppGateway").Path
+#     $cred = New-Object System.Net.NetworkCredential($username, $password)
+ 
+#     function Send-FtpCommand {
+#         param(
+#             [string]$uri,
+#             [string]$method,
+#             [byte[]]$content = $null
+#         )
+ 
+#         $req = [System.Net.FtpWebRequest]::Create($uri)
+#         $req.Method = $method
+#         $req.Credentials = $cred
+#         $req.UseBinary = $true
+#         $req.UsePassive = $true
+#         $req.KeepAlive = $false
+ 
+#         if ($content -ne $null) {
+#             $req.ContentLength = $content.Length
+#             $stream = $req.GetRequestStream()
+#             $stream.Write($content, 0, $content.Length)
+#             $stream.Close()
+#         }
+ 
+#         $res = $req.GetResponse()
+#         $res.Close()
+#     }
+ 
+#     Write-Host "====================================="
+#     Write-Host "Starting Deployment"
+#     Write-Host "====================================="
+ 
+#     # ------------------------------------
+#     # 1. STOP APPLICATION
+#     # ------------------------------------
+#     Write-Host "Uploading app_offline.htm..."
+ 
+#     $offlineHtml = [System.Text.Encoding]::UTF8.GetBytes("<html><body><h1>Site Maintenance</h1><p>Deploying update...</p></body></html>")
+ 
+#     try {
+#         Send-FtpCommand `
+#             -uri "ftp://$ftpServer`:$ftpPort$ftpRoot/app_offline.htm" `
+#             -method ([System.Net.WebRequestMethods+Ftp]::UploadFile) `
+#             -content $offlineHtml
+#     }
+#     catch {
+#         Write-Host "Warning: Could not upload app_offline.htm"
+#     }
+ 
+#     # ------------------------------------
+#     # 2. UPLOAD FILES
+#     # ------------------------------------
+#     Get-ChildItem -Path $basePath -Recurse -File | ForEach-Object {
+ 
+#         $relativePath = $_.FullName.Substring($basePath.Length + 1) -replace '\\','/'
+ 
+#         # Ensure subfolders exist
+#         if ($relativePath.Contains('/')) {
+#             $parts = $relativePath.Split('/')
+#             $pathBuilder = $ftpRoot
+ 
+#             for ($i = 0; $i -lt $parts.Length - 1; $i++) {
+#                 $pathBuilder = "$pathBuilder/$($parts[$i])"
+ 
+#                 try {
+#                     Send-FtpCommand `
+#                         -uri "ftp://$ftpServer`:$ftpPort$pathBuilder/" `
+#                         -method ([System.Net.WebRequestMethods+Ftp]::MakeDirectory)
+#                 }
+#                 catch {
+#                     # Ignore if folder already exists
+#                 }
+#             }
+#         }
+ 
+#         $targetUri = "ftp://$ftpServer`:$ftpPort$ftpRoot/$relativePath"
+ 
+#         Write-Host "Uploading: $relativePath"
+ 
+#         $fileBytes = [System.IO.File]::ReadAllBytes($_.FullName)
+ 
+#         Send-FtpCommand `
+#             -uri $targetUri `
+#             -method ([System.Net.WebRequestMethods+Ftp]::UploadFile) `
+#             -content $fileBytes
+#     }
+ 
+#     # ------------------------------------
+#     # 3. START APPLICATION
+#     # ------------------------------------
+#     Write-Host "Removing app_offline.htm..."
+ 
+#     try {
+#         Send-FtpCommand `
+#             -uri "ftp://$ftpServer`:$ftpPort$ftpRoot/app_offline.htm" `
+#             -method ([System.Net.WebRequestMethods+Ftp]::DeleteFile)
+#     }
+#     catch {
+#         Write-Host "Warning: Could not remove app_offline.htm"
+#     }
+ 
+#     Write-Host "====================================="
+#     Write-Host "Deployment completed successfully."
+#     Write-Host "====================================="

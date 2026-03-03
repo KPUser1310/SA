@@ -27,7 +27,7 @@ namespace SmartAttend.Domain.Entities
         public string? ReceiveAt { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdateDate { get; set; }
-        public bool IsActive { get; set; } = true; // Default true
+        public bool IsDelete { get; set; } = false;
         public int ReportFormat { get; set; } = 1; // Default 1
 
         [ForeignKey(nameof(DeviceUserReportId))]

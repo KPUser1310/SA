@@ -12,10 +12,10 @@ namespace SmartAttend.Domain.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string? Description { get; set; }
         public int? EntityType { get; set; }
-        public bool? Active { get; set; } = true;
+        public bool IsDelete { get; set; } = false;
 
         public ICollection<PlannedShutdownDescription> PlannedShutdownDescriptions { get; set; }   
     }

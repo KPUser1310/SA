@@ -17,6 +17,7 @@ namespace SmartAttend.Domain.Entities
         public int AccountId { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? UpdatedDae { get; set; }
+        public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceUserReportId))]
         public virtual DeviceUserReport DeviceUserReport { get; set; }
