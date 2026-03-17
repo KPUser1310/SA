@@ -110,7 +110,7 @@ namespace SmartAttend.Application.Notifications.Commands
                             foreach (var item in devicedatauserDetails)
                             {
                                 item.IsNotification = request.MachineShutdown;
-                                item.UpdatedDate = DateTime.Now;
+                                item.LastModifiedAt = DateTime.Now;
                                 item.DeviceDataMap.Device.DescriptionId = description.PlannedShutdownDescriptionMaster.Id;
                                 item.DeviceDataMap.Device.Description = description.Description;
                                 item.DeviceDataMap.Device.IsPlanned = request.MachineShutdown;
@@ -206,7 +206,7 @@ namespace SmartAttend.Application.Notifications.Commands
                             await _context.SaveChangesAsync();
 
                             result.IsNotification = request.InputNotification;
-                            result.UpdatedDate = DateTime.Now;
+                            result.LastModifiedAt = DateTime.Now;
                             await _context.SaveChangesAsync();
 
                             await _context.Notifications
@@ -241,7 +241,7 @@ namespace SmartAttend.Application.Notifications.Commands
                                 await _context.SaveChangesAsync();
 
                                 item.IsNotification = request.MachineShutdown;
-                                item.UpdatedDate = DateTime.Now;
+                                item.LastModifiedAt = DateTime.Now;
                                 await _context.SaveChangesAsync();
 
                                 device.DescriptionId = description.PlannedShutdownDescriptionMaster.Id;

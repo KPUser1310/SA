@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartAttend.Domain.Entities
 {
@@ -13,7 +8,7 @@ namespace SmartAttend.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long DeviceConfigDetailsId { get; set; }
-        public long?  DeviceConfigId { get; set; }
+        public long  DeviceConfigId { get; set; }
         public string Input_No { get; set; }
         public string Priority { get; set; }
         public string Color { get; set; }

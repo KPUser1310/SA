@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartAttend.Domain.Entities
 {
@@ -12,7 +7,7 @@ namespace SmartAttend.Domain.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int PartId { get; set; }       
+        public int PartId { get; set; }
         public string GroupID { get; set; }
         public string PartNumber { get; set; }
         public int? Cavity { get; set; }
@@ -24,13 +19,17 @@ namespace SmartAttend.Domain.Entities
         public decimal? ScrapPrice { get; set; }
         public int? CustomerId { get; set; }
         public bool IsDelete { get; set; } = false;
+        public int? LocationId { get; set; }
 
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }
 
+        [ForeignKey(nameof(LocationId))]
+        public virtual Location Location { get; set; }
+
         public ICollection<PartsHistory> PartsHistorys { get; set; }
         public ICollection<AssignedPart> AssignedParts { get; set; }
-        public ICollection<AssignedPartsHistory> AssignedPartsHistorys {  get; set; }
+        public ICollection<AssignedPartsHistory> AssignedPartsHistorys { get; set; }
         public ICollection<AssignMultiPart> AssignMultiParts { get; set; }
         public ICollection<CycleMaintenance> CycleMaintenances { get; set; }
 

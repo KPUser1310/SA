@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Identity.Web;
 using SmartAttend.Application;
+using SmartAttend.Application.Common.Constant;
 using SmartAttend.Application.Common.Inferfaces;
 using SmartAttend.Infrastructure;
-using SmartAttend.Infrastructure.Services;
 using SmartAttend.Infrastructure.Persistence;
 using SmartAttend.Infrastructure.Security;
+using SmartAttend.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,9 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod(); 
     });
 });
+
+builder.Services.Configure<MachineConfiguration>(
+    builder.Configuration.GetSection("MachineConfiguration"));
 
 builder.Services.AddAuthorization();
 
@@ -98,7 +103,12 @@ app.UseCors("AllowOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "Images")),
+    RequestPath = "/Images"
+}); 
 app.MapControllers();
 
 app.Run();

@@ -218,7 +218,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<decimal?>("CycleTime")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<long?>("DeviceId")
+                    b.Property<long>("DeviceId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("DowntimeDuration")
@@ -256,7 +256,7 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int?>("NotesId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("PartId")
+                    b.Property<int>("PartId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("QtyPercentage")
@@ -1122,6 +1122,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<long?>("LastModifiedBy")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("MachineID")
                         .HasColumnType("integer");
 
@@ -1175,6 +1178,8 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
+                    b.HasIndex("LocationId");
+
                     b.ToTable("Devices", "public");
                 });
 
@@ -1205,7 +1210,13 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long?>("DeviceId")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("DeviceId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("DeviceUpdatedDate")
@@ -1243,6 +1254,12 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<int>("IsUpdated")
                         .HasColumnType("integer");
+
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("LastModifiedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<int?>("MachineId")
                         .HasColumnType("integer");
@@ -1318,7 +1335,7 @@ namespace SmartAttend.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<long?>("DeviceConfigId")
+                    b.Property<long>("DeviceConfigId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("DowntimeIncident")
@@ -1760,8 +1777,11 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<string>("ContactHourTo")
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("CreatedBy")
+                        .HasColumnType("bigint");
 
                     b.Property<int?>("DeviceDataMapId")
                         .HasColumnType("integer");
@@ -1772,6 +1792,12 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<int>("IsNotification")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime?>("LastModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("LastModifiedBy")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Message")
                         .HasColumnType("text");
 
@@ -1780,9 +1806,6 @@ namespace SmartAttend.Infrastructure.Migrations
 
                     b.Property<int?>("TimeDelay")
                         .HasColumnType("integer");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("DeviceDataUserMapId");
 
@@ -2337,6 +2360,35 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.ToTable("InputBasedCounterHistories", "public");
                 });
 
+            modelBuilder.Entity("SmartAttend.Domain.Entities.Location", b =>
+                {
+                    b.Property<int>("LocationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Logo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("LocationId");
+
+                    b.ToTable("Location", "public");
+                });
+
             modelBuilder.Entity("SmartAttend.Domain.Entities.MachineType", b =>
                 {
                     b.Property<int>("MachineId")
@@ -2720,6 +2772,9 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<long?>("LastModifiedBy")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PartNumber")
                         .IsRequired()
                         .HasColumnType("text");
@@ -2739,6 +2794,8 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.HasKey("PartId");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("LocationId");
 
                     b.ToTable("Parts", "public");
                 });
@@ -3428,9 +3485,6 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<long>("CreatedBy")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
@@ -3899,11 +3953,16 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Property<long?>("LastModifiedBy")
                         .HasColumnType("bigint");
 
+                    b.Property<int?>("LocationId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("UserRoleId");
+
+                    b.HasIndex("LocationId");
 
                     b.ToTable("UserRole", "public");
                 });
@@ -3986,11 +4045,15 @@ namespace SmartAttend.Infrastructure.Migrations
                 {
                     b.HasOne("SmartAttend.Domain.Entities.Device", "Device")
                         .WithMany("AssignedParts")
-                        .HasForeignKey("DeviceId");
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SmartAttend.Domain.Entities.Part", "Part")
                         .WithMany("AssignedParts")
-                        .HasForeignKey("PartId");
+                        .HasForeignKey("PartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Device");
 
@@ -4139,14 +4202,22 @@ namespace SmartAttend.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SmartAttend.Domain.Entities.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("SmartAttend.Domain.Entities.DeviceConfig", b =>
                 {
                     b.HasOne("SmartAttend.Domain.Entities.Device", "Device")
                         .WithMany("DeviceConfigs")
-                        .HasForeignKey("DeviceId");
+                        .HasForeignKey("DeviceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SmartAttend.Domain.Entities.MachineType", "MachineType")
                         .WithMany("DeviceConfigs")
@@ -4161,7 +4232,9 @@ namespace SmartAttend.Infrastructure.Migrations
                 {
                     b.HasOne("SmartAttend.Domain.Entities.DeviceConfig", "DeviceConfig")
                         .WithMany("DeviceConfigDetails")
-                        .HasForeignKey("DeviceConfigId");
+                        .HasForeignKey("DeviceConfigId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("DeviceConfig");
                 });
@@ -4463,6 +4536,17 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Navigation("Device");
                 });
 
+            modelBuilder.Entity("SmartAttend.Domain.Entities.Location", b =>
+                {
+                    b.HasOne("SmartAttend.Domain.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("SmartAttend.Domain.Entities.MachineType", b =>
                 {
                     b.HasOne("SmartAttend.Domain.Entities.Customer", "Customer")
@@ -4573,7 +4657,13 @@ namespace SmartAttend.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId");
 
+                    b.HasOne("SmartAttend.Domain.Entities.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("SmartAttend.Domain.Entities.PartsHistory", b =>
@@ -4807,6 +4897,15 @@ namespace SmartAttend.Infrastructure.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Part");
+                });
+
+            modelBuilder.Entity("SmartAttend.Domain.Entities.UserRole", b =>
+                {
+                    b.HasOne("SmartAttend.Domain.Entities.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId");
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("SmartAttend.Domain.Entities.WorkingDays", b =>

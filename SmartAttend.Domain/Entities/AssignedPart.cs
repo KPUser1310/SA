@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartAttend.Domain.Entities
 {
@@ -13,8 +8,8 @@ namespace SmartAttend.Domain.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int? PartId { get; set; }
-        public long? DeviceId { get; set; }
+        public int PartId { get; set; }
+        public long DeviceId { get; set; }
         public int? Cavity { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]

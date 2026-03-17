@@ -14,6 +14,10 @@ namespace SmartAttend.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserRoleId { get; set; }
         public string Role { get; set; }
+        public int? LocationId { get; set; }
         public ICollection<Account> Accounts { get; set; }
+
+        [ForeignKey(nameof(LocationId))]
+        public virtual Location Location { get; set; }
     }
 }

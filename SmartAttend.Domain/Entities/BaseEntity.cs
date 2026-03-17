@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SmartAttend.Domain.Entities
+﻿namespace SmartAttend.Domain.Entities
 {
     public abstract class BaseEntity
     {

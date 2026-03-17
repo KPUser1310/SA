@@ -1,4 +1,5 @@
-﻿using SmartAttend.Domain.Entities;
+﻿using SmartAttend.Application.Production.DTOs;
+using SmartAttend.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,9 @@ namespace SmartAttend.Application.Common.DTOs
         public AssignedPart assignedPart { get; set; }
         public List<Part> lstPart { get; set; }
         public List<AssignedPartsModel> LstAssignedPartModel { get; set; }
-
-        public List<PartModel> LstPartModel { get; set; }
+        public List<AssignedPartsDtos> ListAssignedPartModel { get; set; }      
+            
+         public List<PartModel> LstPartModel { get; set; }
     }
 
     public class AssignedPartsModel

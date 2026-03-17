@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartAttend.Domain.Entities
 {
-    public partial class DeviceConfig 
+    public partial class DeviceConfig : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long DeviceConfigId { get; set; }
-        public long? DeviceId { get; set; }
+        public long DeviceId { get; set; }
         public int? MachineId { get; set; }
         public string WLAN_SSID { get; set; }
         public string WLAN_Password { get; set; }

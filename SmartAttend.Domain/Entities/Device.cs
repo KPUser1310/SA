@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartAttend.Domain.Entities
 {
@@ -61,9 +56,13 @@ namespace SmartAttend.Domain.Entities
         public string LastCounterCycleTime { get; set; }
         public int? LastCounterEfficiency { get; set; }
         public bool IsDelete { get; set; } = false;
+        public int? LocationId { get; set; }
 
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer Customer { get; set; }
+
+        [ForeignKey(nameof(LocationId))]
+        public virtual Location Location { get; set; }
 
         public ICollection<AssignedPart> AssignedParts { get; set; }
         public ICollection<AssignedPartsHistory> AssignedPartsHistorys { get; set; }

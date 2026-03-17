@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="Common\Behaviours\" />
+    <Folder Include="Devices\DTOs\" />
     <Folder Include="Test\DTOs\" />
     <Folder Include="Test\Queries\" />
   </ItemGroup>

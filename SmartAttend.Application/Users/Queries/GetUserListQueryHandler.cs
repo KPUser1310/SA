@@ -1,52 +1,54 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using SmartAttend.Application.Users.DTOs;
 using SmartAttend.Application.Common.Inferfaces;
+using SmartAttend.Application.Users.DTOs;
+using SmartAttend.Application.Common.Constant;
 
 namespace SmartAttend.Application.Users.Queries
 {
-    public class GetUserListQuery : IRequest<UserResponseDto>
+    public class GetUserListQuery : IRequest<GetUsersListResponseDto>
     {
-        public int CustomerId { get; set; }
     }
-    public class GetUserListQueryHandler: IRequestHandler<GetUserListQuery, UserResponseDto>
+    public class GetUserListQueryHandler: IRequestHandler<GetUserListQuery, GetUsersListResponseDto>
     {
         private readonly IApplicationDbContext _context;
-        private readonly IConfiguration _configuration;
+        
+        private readonly ICurrentUserService _currentUserService;
         public GetUserListQueryHandler(
             IApplicationDbContext context,
-            IConfiguration configuration)
+            ICurrentUserService currentUserService)
         {
             _context = context;
-            _configuration = configuration;
+            _currentUserService = currentUserService ?? throw new ArgumentNullException(nameof(currentUserService)); 
         }
-        public async Task<UserResponseDto> Handle(GetUserListQuery request, CancellationToken cancellationToken)
+        public async Task<GetUsersListResponseDto> Handle(GetUserListQuery request, CancellationToken cancellationToken)
         {
-            var response = new UserResponseDto();
+            var response = new GetUsersListResponseDto();
             try
             {
-                var siteUrl = _configuration["Site"];
+                var customerId = _currentUserService.CustomerId;
+
+                if (!customerId.HasValue || customerId.Value == 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "CustomerId could not be resolved from user context.";
+                    return response;
+                }
+
                 var users = await _context.Accounts.AsNoTracking()
-                    .Where(x =>x.CustomerId == request.CustomerId && (x.IsDelete == false || x.IsDelete == null))
+
+                    .Where(x =>x.CustomerId == customerId && x.IsDelete == false)
                      .OrderBy(x => x.UserRoleId)
                      .ThenBy(x => x.FirstName)
-                     .Select(x => new UserDto
+                     .Select(x => new GetUsersListDto
                      {
                          AccountId = x.AccountId,
-                         CustomerId = x.CustomerId ?? 0,
                          UserRoleId = x.UserRoleId,
                          FirstName = x.FirstName,
                          LastName = x.LastName,
-                         EmailAddress = x.EmailAddress,
-                         ContactNo = x.ContactNo,
-                         Status = x.Status,
-                         IsEmailNotification = x.IsEmailNotification,
-                         VacationDateFrom = x.VacationDateFrom,
-                         VacationDateTo = x.VacationDateTo,
                          Image = string.IsNullOrEmpty(x.Image)
                              ? string.Empty
-                             : siteUrl + x.Image
+                             : Constant.AdminImageUrl + x.Image
                      })
                      .ToListAsync(cancellationToken);
                 response.IsSuccess = true;

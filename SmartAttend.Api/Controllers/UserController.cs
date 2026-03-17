@@ -11,62 +11,61 @@ namespace SmartAttend.WebApi.Controllers
     [ApiController]
     public class UserController : ApiControllerBase
     {
-        [HttpPost]
-        [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status409Conflict)]
+        [HttpPost("createUser")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand command, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateUser([FromForm] CreateUserCommand command, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 
-        [HttpPut]
-        [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status409Conflict)]
+        [HttpPut("updateUser")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateUser(UpdateUserCommand command, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateUser([FromForm] UpdateUserCommand command, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 
-        [HttpDelete("getDeleteAccount/{accountId}")]
-        [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
+        [HttpDelete("deleteUser")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> GetDeleteAccount(int accountId, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteUser([FromHeader] int accountId, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new DeleteAccountQuery { AccountId = accountId }, cancellationToken);
+            var result = await Mediator.Send(new DeleteAccountCommand { AccountId = accountId }, cancellationToken);
             return Ok(result);
         }
 
-        [HttpGet("customer/{customerId:int}")]
-        [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
+        [HttpGet("getUsersList")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetUserList(int customerId, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetUserList(CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetUserListQuery { CustomerId = customerId }, cancellationToken);
+            var result = await Mediator.Send(new GetUserListQuery(), cancellationToken);
             return Ok(result);
         }
 
-        [HttpGet("{accountId:int}")]
-        [ProducesResponseType(typeof(UserResponseDto), StatusCodes.Status200OK)]
+        [HttpGet("getUser")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetUpdateUser(int accountId, CancellationToken cancellationToken)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetUser([FromHeader] int accountId, CancellationToken cancellationToken)
         {
-            var result = await Mediator.Send(new GetUpdateUserQuery { AccountId = accountId }, cancellationToken);
+            var result = await Mediator.Send(new GetUserQuery { AccountId = accountId }, cancellationToken);
             return Ok(result);
         }
+
     }
 
 }

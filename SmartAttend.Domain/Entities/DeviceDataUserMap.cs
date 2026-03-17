@@ -1,9 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartAttend.Domain.Entities
 {
-    public partial class DeviceDataUserMap
+    public partial class DeviceDataUserMap : BaseEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -15,9 +15,7 @@ namespace SmartAttend.Domain.Entities
         public int? TimeDelay { get; set; }
         public int? Remainder { get; set; }
         public int IsNotification { get; set; }
-        public string? Message { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
+        public string? Message { get; set; }    
         public bool IsDelete { get; set; } = false;
 
         [ForeignKey(nameof(DeviceDataMapId))]

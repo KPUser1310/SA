@@ -36,22 +36,6 @@ namespace SmartAttend.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("getUpdatePartbyId/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetUpdatePartbyID(int id)
-        {
-            if (id == 0)
-                return BadRequest("Id cannot be zero.");
-
-            var query = new GetUpdatePartByIdQuery { Id = id };
-            var response = await Mediator.Send(query);
-
-            return Ok(response);
-        }
-
         [HttpPost("updatePart")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -65,24 +49,7 @@ namespace SmartAttend.API.Controllers
                 return BadRequest(response.Message); 
             return Ok(response); 
         }
-
-
-            [HttpGet("getRemovePart/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetRemovePart(int id)
-        {
-            if (id == 0)
-                return BadRequest("Id cannot be zero.");
-
-            // Create and send the command via MediatR
-            var response = await Mediator.Send(new GetRemovePartQuery { Id = id });
-
-            return Ok(response);
-        }
-
+        
         [HttpPost("addPart")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,7 +60,7 @@ namespace SmartAttend.API.Controllers
             if (model == null)
                 return BadRequest("Model cannot be null.");
 
-            var command = new AddPartCommand(model);
+             var command = new AddPartCommand(model);
             var response = await Mediator.Send(command);
 
             if (!response.IsSuccess)

@@ -1,31 +1,52 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using SmartAttend.Application.Users.DTOs;
+using Microsoft.Extensions.Configuration;
 using SmartAttend.Application.Common.Enums;
 using SmartAttend.Application.Common.Inferfaces;
+using SmartAttend.Application.Users.DTOs;
 
 namespace SmartAttend.Application.Users.Commands
 {
 
-    public class UpdateUserCommand : IRequest<UserResponseDto>
+    public class UpdateUserCommand : IRequest<UpdateUserResponseDto>
     {
-        public UserDto User { get; set; }
-        public string Password { get; set; }
+        public UpdateUserDto User { get; set; }
+        public IFormFile? Image { get; set; }
     }
-    public class UpdateUserCommandHandler: IRequestHandler<UpdateUserCommand, UserResponseDto>
+    public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, UpdateUserResponseDto>
     {
         private readonly IApplicationDbContext _context;
-        public UpdateUserCommandHandler(IApplicationDbContext context)
+        private readonly IConfiguration _configuration;
+        private readonly ICurrentUserService _currentUserService;
+
+        public UpdateUserCommandHandler(
+            IApplicationDbContext context,
+            IConfiguration configuration,
+            ICurrentUserService currentUserService)
         {
             _context = context;
+            _configuration = configuration;
+            _currentUserService = currentUserService ?? throw new ArgumentNullException(nameof(currentUserService));
         }
-        public async Task<UserResponseDto> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+        public async Task<UpdateUserResponseDto> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var response = new UserResponseDto();
+            var response = new UpdateUserResponseDto();
             try
             {
+                // ✅ Resolve CustomerId and AccountId from user context
+                var customerId = _currentUserService.CustomerId;
+                var accountId = _currentUserService.AccountId;
+
+                if (!customerId.HasValue || customerId.Value == 0)
+                {
+                    response.IsSuccess = false;
+                    response.Message = "CustomerId could not be resolved from user context.";
+                    return response;
+                }
+
                 var model = request.User;
-                var result = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == model.AccountId, cancellationToken);
+                var result = await _context.Accounts.FirstOrDefaultAsync(x => x.AccountId == model.AccountId, cancellationToken); // account id from request
 
                 if (result == null)
                 {
@@ -37,8 +58,8 @@ namespace SmartAttend.Application.Users.Commands
                 // ROLE ID = 2 Admin check
                 var adminRoleId = (int)UserRoles.Admin;
                 // Count current admins for the customer
-                var adminCount = await _context.Accounts.CountAsync(x => x.CustomerId == model.CustomerId && x.UserRoleId == adminRoleId, cancellationToken);
-                
+                var adminCount = await _context.Accounts.CountAsync(x => x.CustomerId == customerId && x.UserRoleId == adminRoleId, cancellationToken);
+
                 if (result.UserRoleId == adminRoleId && model.UserRoleId != adminRoleId)
                 {
                     adminCount--;
@@ -60,7 +81,7 @@ namespace SmartAttend.Application.Users.Commands
                 if (emailCount >= 1)
                 {
                     response.IsSuccess = false;
-                    response.Message = "Email alreary exist";
+                    response.Message = "Email already exist";
                     return response;
                 }
 
@@ -73,37 +94,114 @@ namespace SmartAttend.Application.Users.Commands
                     return response;
                 }
 
-                result.CustomerId = model.CustomerId;
+                result.CustomerId = customerId.Value;
                 result.UserRoleId = model.UserRoleId;
-                result.FirstName = model.FirstName?.Trim();
+                result.FirstName = model.FirstName.Trim();
                 result.LastName = model.LastName;
                 result.ContactNo = model.ContactNo;
                 result.EmailAddress = model.EmailAddress;
                 result.Status = model.Status;
-                result.IsVocationMode = model.IsVocationMode;
-                result.IsEmailNotification = model.IsEmailNotification;
-                result.Image = model.Image;
-                result.IsTempPassword = model.IsTempPassword;
+                result.LastModifiedBy = accountId;
                 result.LastModifiedAt = DateTime.UtcNow;
                 result.VacationDateFrom = NormalizeFrom(model.VacationDateFrom);
                 result.VacationDateTo = NormalizeTo(model.VacationDateTo);
 
                 await _context.SaveChangesAsync(cancellationToken);
-                // VACATION MODE EFFECT
-                if (model.IsVocationMode)
-                {
-                    var notifications = await _context.Notifications.Where(x => x.AccountId == model.AccountId && !x.IsDelete).ToListAsync(cancellationToken);
 
-                    if (notifications.Count > 0)
+                // IMAGE UPDATE / REPLACE LOGIC (deletes the exiting one then inserts the new img)
+                if (request.Image != null && request.Image.Length > 0)
+                {
+                    var imageRoot = _configuration.GetValue<string>("ImageStoragePath");
+
+                    var folderPath = Path.Combine(
+                         Directory.GetCurrentDirectory(),
+                         imageRoot
+                     );
+
+                    if (!Directory.Exists(folderPath))
+                        Directory.CreateDirectory(folderPath);
+
+                    // DELETE OLD IMAGE IF EXISTS
+                    if (!string.IsNullOrWhiteSpace(result.Image))
                     {
-                        notifications.ForEach(n => n.IsDelete = true);
-                        await _context.SaveChangesAsync(cancellationToken);
+                        var oldImagePath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            result.Image.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString())
+                        );
+
+                        if (File.Exists(oldImagePath))
+                            File.Delete(oldImagePath);
                     }
+
+                    var extension = Path.GetExtension(request.Image.FileName);
+
+                    var fileName = $"user_profile_{result.AccountId}{extension}";
+
+
+                    var filePath = Path.Combine(folderPath, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await request.Image.CopyToAsync(stream, cancellationToken);
+                    }
+
+                    result.Image = $"/{imageRoot}/{fileName}";
+
+                    _context.Accounts.Update(result);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+
+                // WORKING DAYS UPDATE LOGIC (null / empty => clear all)
+                {
+                    var selectedDays = model.WorkingDays ?? new List<int>();
+
+                    // validate enum values (only if list has items)
+                    if (selectedDays.Any(d => !Enum.IsDefined(typeof(Common.Enums.WorkingDays), d)))
+                    {
+                        response.IsSuccess = false;
+                        response.Message = "Invalid working day value";
+                        return response;
+                    }
+
+                    var existingDays = await _context.WorkingDays
+                        .Where(x => x.AccountId == model.AccountId)
+                        .ToListAsync(cancellationToken);
+
+                    // SAFETY: if rows don't exist, create all 7
+                    if (!existingDays.Any())
+                    {
+                        var newDays = Enum.GetValues(typeof(Common.Enums.WorkingDays))
+                            .Cast<Common.Enums.WorkingDays>()
+                            .Select(day => new Domain.Entities.WorkingDays
+                            {
+                                AccountId = model.AccountId,
+                                Days = day.ToString(),
+                                IsSelected = selectedDays.Contains((int)day), // null/empty => all false
+                                CreatedBy = accountId,
+                                CreatedAt = DateTime.UtcNow,
+                                LastModifiedBy = accountId,
+                                LastModifiedAt = DateTime.UtcNow
+                            })
+                            .ToList();
+
+                        await _context.WorkingDays.AddRangeAsync(newDays, cancellationToken);
+                    }
+                    else
+                    {
+                        foreach (var day in existingDays)
+                        {
+                            var enumValue = Enum.Parse<Common.Enums.WorkingDays>(day.Days);
+                            day.IsSelected = selectedDays.Contains((int)enumValue); // null/empty => false
+                            day.LastModifiedAt = DateTime.UtcNow;
+                        }
+                    }
+
+                    await _context.SaveChangesAsync(cancellationToken);
                 }
                 response.IsSuccess = true;
                 response.Message = "Updated Successfully";
             }
-            catch
+            catch (Exception ex)
             {
                 throw;
             }

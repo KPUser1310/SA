@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SmartAttend.Application.Common.Inferfaces;
 using SmartAttend.Application.Interface;
 using SmartAttend.Application.Interfaces;
+using SmartAttend.Application.Production.Services;
 using SmartAttend.Infrastructure.Persistence;
 using SmartAttend.Infrastructure.Services;
 using SmartAttend.Infrastructure.Services.Notifications;
@@ -32,7 +33,7 @@ namespace SmartAttend.Infrastructure
             services.AddTransient<IDapperConnectionFactory, DapperContext>();
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
             services.AddScoped<IPartService, PartService>();
-
+            services.AddScoped<IProductionService, ProductionService>();
 
             services.AddServiceDependency(configuration);
             // Map interface to concrete DbContext

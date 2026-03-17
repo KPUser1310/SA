@@ -1,20 +1,18 @@
-﻿using SmartAttend.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SmartAttend.Application.Common.Inferfaces
+﻿namespace SmartAttend.Application.Common.Inferfaces
 {
     public interface ICurrentUserService
     {
-        int AccountId { get; }
-        int UserRoleId { get; }
-        int? CustomerId { get; }
-        string AzureObjectId { get; }
         bool IsAuthenticated { get; }
+        int AccountId { get; }
+        string? UserId { get; }
+        string? Email { get; }
+        int UserRoleId { get; }
+        string? FirstName { get; }
+        string? LastName { get; }
+        int? CustomerId { get; }
+        string? PhoneNumber { get; }
         string CorrelationId { get; }
+        string? AzureObjectId { get; }
     }
 
 }

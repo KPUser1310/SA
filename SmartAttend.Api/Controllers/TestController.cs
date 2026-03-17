@@ -29,10 +29,12 @@ namespace SmartAttend.WebApi.Controllers
             return Ok("GetSample added");
         }
 
-        [HttpPut("UpdateSample")]
-        public async Task<IActionResult> UpdateSample([FromBody] SampleCreateCommand command, CancellationToken cancellationToken)
+        [HttpPut]
+        [Route("UpdateSample")]
+        public async Task<IActionResult> UpdateSample(SampleCreateCommand command,CancellationToken cancellationToken)
         {
-            return Ok();
+
+            return Ok();           
         }
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartAttend.Application.Common.DTOs;
+using SmartAttend.Application.Common.DTOs.User.Commands;
 using SmartAttend.Application.Common.Inferfaces;
 using System.Security.Claims;
 
@@ -18,15 +19,16 @@ namespace SmartAttend.WebApi.Controllers
             _currentUserService = currentUserService;
         }
 
+
         [HttpGet("secure")]
         [ProducesResponseType(typeof(AuthStatusDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Secure()
         {
             var expClaim = User.FindFirst("exp")?.Value;
-
             DateTime? expiresAt = null;
             int? expiresIn = null;
+
 
             if (expClaim != null && long.TryParse(expClaim, out var exp))
             {
@@ -34,10 +36,16 @@ namespace SmartAttend.WebApi.Controllers
                 expiresIn = (int)(expiresAt.Value - DateTime.UtcNow).TotalSeconds;
             }
 
-            var isMfaSatisfied = User.Claims.Any(c =>
-                (c.Type == "amr" ||
-                 c.Type == "http://schemas.microsoft.com/claims/authnmethodsreferences") &&
-                (c.Value == "mfa" || c.Value == "otp"));
+
+            var isMfaSatisfied = User.Claims
+                 .Where(c => c.Type == "amr" || c.Type == "http://schemas.microsoft.com/claims/authnmethodsreferences")
+                 .Any(c => (c.Value.Contains("pwd") || c.Value.Contains("otp"))) && User.Claims.Any(c => c.Value.Contains("mfa"));
+
+
+            if (!isMfaSatisfied)
+            {
+                return Unauthorized(new { message = "MFA is required for login." });
+            }
 
             return Ok(new AuthStatusDto
             {
@@ -49,6 +57,7 @@ namespace SmartAttend.WebApi.Controllers
             });
         }
 
+
         [HttpGet("claims")]
         [ProducesResponseType(typeof(IEnumerable<ClaimDto>), StatusCodes.Status200OK)]
         public IActionResult Claims()
@@ -57,11 +66,20 @@ namespace SmartAttend.WebApi.Controllers
             {
                 Type = c.Type,
                 Value = c.Value ?? string.Empty
-                })
+            })
                 .ToList()
                 ?? new List<ClaimDto>();
 
             return Ok(claims);
+        }
+
+        [HttpPost("login")]
+        [ProducesResponseType(typeof(UserLoginResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Login()
+        {
+            var result = await Mediator.Send(new SyncUserCommand());
+            return Ok(result);
         }
     }
 }
